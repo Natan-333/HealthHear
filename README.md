@@ -1,7 +1,7 @@
 # **Global Solutions 2023 - FIAP & Health Hear**
 <br />
 <p align="center">
-  <img src="HealthHear.png" alt="HealthHear">
+  <img src="HealthHear.png" alt="HealthHear" width=200>
 </p>
 
 <p align="center">

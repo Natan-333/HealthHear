@@ -1,67 +1,38 @@
 SET SERVEROUTPUT ON;
 
+-- DROP TABLES CASO NECESSÁRIO
+DROP TABLE usuario CASCADE CONSTRAINTS;
+DROP TABLE registro CASCADE CONSTRAINTS;
+DROP TABLE feedback CASCADE CONSTRAINTS;
+DROP TABLE especialidade CASCADE CONSTRAINTS;
+DROP TABLE registro_especialidade CASCADE CONSTRAINTS;
+DROP TABLE resposta CASCADE CONSTRAINTS;
+
+-- SELECTS CASO NECESSÁRIO
+SELECT * FROM usuario;
+SELECT * FROM registro;
+SELECT * FROM feedback;
+SELECT * FROM especialidade;
+SELECT * FROM registro_especialidade;
+SELECT * FROM resposta;
 
 -- 01. CRIAÇÃO DAS TABELAS:
-
-DROP TABLE Denuncia CASCADE CONSTRAINTS;
-DROP TABLE Tipo_Denuncia CASCADE CONSTRAINTS;
-DROP TABLE Resposta CASCADE CONSTRAINTS;
-DROP TABLE Feedback CASCADE CONSTRAINTS;
-DROP TABLE Usuario CASCADE CONSTRAINTS;
-DROP TABLE Registro_Especialidade CASCADE CONSTRAINTS;
-DROP TABLE Especialidade CASCADE CONSTRAINTS;
-DROP TABLE Registro CASCADE CONSTRAINTS;
-DROP TABLE Tipo_Registro CASCADE CONSTRAINTS;
-DROP TABLE Uf CASCADE CONSTRAINTS;
-DROP TABLE Pessoa_Fisica CASCADE CONSTRAINTS;
-DROP TABLE Pessoa CASCADE CONSTRAINTS;
-
-CREATE TABLE Pessoa (
-    id_pessoa NUMBER(9) CONSTRAINT pk_id_pessoa PRIMARY KEY,
-    nome_pessoa VARCHAR(255) CONSTRAINT nn_nome_pessoa NOT NULL,
-    imagem_pessoa VARCHAR(255)
-);
-
-CREATE TABLE Pessoa_Fisica (
-    cpf_pf VARCHAR(25) CONSTRAINT pk_cpf_pf PRIMARY KEY,
-    id_pessoa NUMBER(9) CONSTRAINT fk_pessoa_pf REFERENCES Pessoa(id_pessoa) CONSTRAINT nn_pessoa_pf NOT NULL
-);
-
-CREATE TABLE Uf (
-    id_uf NUMBER(9) CONSTRAINT pk_id_uf PRIMARY KEY,
-    sigla_uf VARCHAR(2) CONSTRAINT uk_sigla_uf UNIQUE CONSTRAINT nn_sigla_uf NOT NULL
-);
-
-CREATE TABLE Tipo_Registro (
-    id_tipo_registro NUMBER(9) CONSTRAINT pk_id_tipo_registro PRIMARY KEY,
-    nome_tipo_registro VARCHAR(255) CONSTRAINT uk_nome_tipo_registro UNIQUE CONSTRAINT nn_nome_tipo_registro NOT NULL
+CREATE TABLE Usuario (
+    id_usuario NUMBER(9) CONSTRAINT pk_id_usuario PRIMARY KEY,
+    email_usuario VARCHAR(255) CONSTRAINT uk_email_usuario UNIQUE CONSTRAINT nn_email_usuario NOT NULL,
+    senha_usuario VARCHAR(255) CONSTRAINT nn_senha_usuario NOT NULL,
+    nome_usuario VARCHAR(255) CONSTRAINT nn_nome_usuario NOT NULL,
+    cpf_usuario CHAR(11) CONSTRAINT uk_cpf_usuario UNIQUE CONSTRAINT nn_cpf_usuario NOT NULL,
+    imagem_usuario VARCHAR(255)
 );
 
 CREATE TABLE Registro (
     id_registro NUMBER(9) CONSTRAINT pk_id_registro PRIMARY KEY,
     numero_registro VARCHAR(255) CONSTRAINT nn_numero_registro NOT NULL,
-    id_uf NUMBER(9) CONSTRAINT fk_registro_uf REFERENCES Uf(id_uf),
-    id_tipo_registro NUMBER(9) CONSTRAINT fk_registro_tipo_registro REFERENCES Tipo_Registro(id_tipo_registro),
-    id_pessoa NUMBER(9) CONSTRAINT fk_registro_pessoa REFERENCES Pessoa(id_pessoa)
-);
-
-CREATE TABLE Especialidade (
-    id_especialidade NUMBER(9) CONSTRAINT pk_id_especialidade PRIMARY KEY,
-    nome_especialidade VARCHAR(255) CONSTRAINT uk_nome_especialidade UNIQUE CONSTRAINT nn_nome_especialidade NOT NULL
-);
-
-CREATE TABLE Registro_Especialidade (
-    id_registro NUMBER(9) CONSTRAINT fk_registro_especialidade_registro REFERENCES Registro(id_registro) CONSTRAINT nn_registro_especialidade NOT NULL,
-    id_especialidade NUMBER(9) CONSTRAINT fk_registro_especialidade_especialidade REFERENCES Especialidade(id_especialidade) CONSTRAINT nn_especialidade_especialidade NOT NULL,
-    CONSTRAINT pk_registro_especialidade PRIMARY KEY (id_registro, id_especialidade)
-);
-
-CREATE TABLE Usuario (
-    id_usuario NUMBER(9) CONSTRAINT pk_id_usuario PRIMARY KEY,
-    email_usuario VARCHAR(255) CONSTRAINT nn_email_usuario NOT NULL,
-    senha_usuario VARCHAR(255) CONSTRAINT nn_senha_usuario NOT NULL,
-    id_pessoa NUMBER(9) CONSTRAINT fk_usuario_pessoa REFERENCES Pessoa(id_pessoa),
-    CONSTRAINT uk_usuario_email UNIQUE (id_pessoa, email_usuario)
+    uf_registro CHAR(2) CONSTRAINT nn_uf_registro NOT NULL,
+    tipo_registro VARCHAR(255) CONSTRAINT nn_tipo_registro NOT NULL,
+    id_usuario NUMBER(9) CONSTRAINT fk_usuario_registro REFERENCES Usuario(id_usuario),
+    CONSTRAINT uk_registro_unico UNIQUE (numero_registro, uf_registro, tipo_registro)
 );
 
 CREATE TABLE Feedback (
@@ -69,10 +40,23 @@ CREATE TABLE Feedback (
     data_feedback DATE CONSTRAINT nn_data_feedback NOT NULL,
     titulo_feedback VARCHAR(255) CONSTRAINT nn_titulo_feedback NOT NULL,
     descricao_feedback VARCHAR(255) CONSTRAINT nn_descricao_feedback NOT NULL,
-    nota_feedback NUMBER(4,2),
-    id_paciente NUMBER(9) CONSTRAINT fk_feedback_paciente REFERENCES Pessoa(id_pessoa),
-    id_registro NUMBER(9) CONSTRAINT fk_feedback_registro REFERENCES Registro(id_registro),
-    is_anonimo NUMBER(1) CONSTRAINT nn_is_anonimo NOT NULL
+    nota_feedback NUMBER(4,2) CONSTRAINT nn_nota_feedback NOT NULL,
+    id_paciente NUMBER(9) CONSTRAINT fk_paciente_feedback REFERENCES Usuario(id_usuario),
+    id_registro NUMBER(9) CONSTRAINT fk_registro_feedback REFERENCES Registro(id_registro),
+    is_anonimo NUMBER(1) CONSTRAINT nn_is_anonimo_feedback NOT NULL,
+    acao_tomada_feedback VARCHAR(255),
+    evidencia_feedback VARCHAR(255),
+    tipo_feedback VARCHAR(255) CONSTRAINT nn_tipo_feedback NOT NULL
+);
+
+CREATE TABLE Especialidade (
+    id_especialidade NUMBER(9) CONSTRAINT pk_id_especialidade PRIMARY KEY,
+    nome_especialidade VARCHAR(255) CONSTRAINT uk_nome_especialidade UNIQUE CONSTRAINT nn_nome_especilidade NOT NULL
+);
+
+CREATE TABLE Registro_Especialidade (
+    id_registro NUMBER(9) CONSTRAINT fk_registro_especialidade REFERENCES Registro(id_registro),
+    id_especialidade NUMBER(9) CONSTRAINT fk_especialidade_registro REFERENCES Especialidade(id_especialidade)
 );
 
 CREATE TABLE Resposta (
@@ -83,42 +67,44 @@ CREATE TABLE Resposta (
     id_feedback NUMBER(9) CONSTRAINT fk_resposta_feedback REFERENCES Feedback(id_feedback)
 );
 
-CREATE TABLE Tipo_Denuncia (
-    id_tipo_denuncia NUMBER(9) CONSTRAINT pk_id_tipo_denuncia PRIMARY KEY,
-    nome_tipo_denuncia VARCHAR(255) CONSTRAINT uk_nome_tipo_denuncia UNIQUE CONSTRAINT nn_nome_tipo_denuncia NOT NULL
-);
-
-CREATE TABLE Denuncia (
-    id_tipo_denuncia NUMBER(9) CONSTRAINT fk_denuncia_tipo_denuncia REFERENCES Tipo_Denuncia(id_tipo_denuncia) CONSTRAINT nn_id_tipo_denuncia NOT NULL,
-    acao_tomada_denuncia VARCHAR(255),
-    evidencia_denuncia VARCHAR(255),
-    id_feedback NUMBER(9) CONSTRAINT fk_denuncia_feedback REFERENCES Feedback(id_feedback) CONSTRAINT pk_id_feedback_denuncia PRIMARY KEY
-);
-
--- 2. Carga de Dados 
-
-//Pessoa
-
-CREATE SEQUENCE seq_pessoa
-START WITH 1
-INCREMENT BY 1;
+-- 02. Carga de Dados 
+-- 02.01. Usuario
+CREATE SEQUENCE seq_usuario START WITH 1 INCREMENT BY 1;
 
 DECLARE
-    v_id_pessoa Pessoa.id_pessoa%TYPE;
-    v_nome_pessoa Pessoa.nome_pessoa%TYPE;
-    v_imagem_pessoa Pessoa.imagem_pessoa%TYPE;
+    v_email_usuario Usuario.email_usuario%TYPE;
+    v_senha_usuario Usuario.senha_usuario%TYPE;
+    v_nome_usuario Usuario.nome_usuario%TYPE;
+    v_cpf_usuario Usuario.cpf_usuario%TYPE;
+    v_imagem_usuario Usuario.imagem_usuario%TYPE;
+    v_id_usuario Usuario.id_usuario%TYPE;
+    v_contagem_email NUMBER;
+    v_contagem_cpf NUMBER;
 
 BEGIN
-    SELECT seq_pessoa.NEXTVAL INTO v_id_pessoa FROM DUAL;
+    SELECT seq_usuario.NEXTVAL INTO v_id_usuario FROM DUAL;
 
-    v_nome_pessoa := '&nome_pessoa';
-    v_imagem_pessoa := '&imagem_pessoa';
+    v_email_usuario := '&email_usuario';
+    v_senha_usuario := '&senha_usuario';
+    v_nome_usuario := '&nome_usuario';
+    v_cpf_usuario := '&cpf_usuario';
+    v_imagem_usuario := '&imagem_usuario';
 
-    INSERT INTO Pessoa (id_pessoa, nome_pessoa, imagem_pessoa)
-    VALUES (v_id_pessoa, v_nome_pessoa, v_imagem_pessoa);
+    SELECT COUNT(*) INTO v_contagem_email FROM Usuario WHERE email_usuario = v_email_usuario;
+    IF v_contagem_email > 0 THEN
+        RAISE_APPLICATION_ERROR(-20008, 'Este email já está cadastrado para um usuário.');
+    END IF;
+
+    SELECT COUNT(*) INTO v_contagem_cpf FROM Usuario WHERE cpf_usuario = v_cpf_usuario;
+    IF v_contagem_cpf > 0 THEN
+        RAISE_APPLICATION_ERROR(-20009, 'Este CPF já está cadastrado para um usuário.');
+    END IF;
+
+    INSERT INTO Usuario (id_usuario, email_usuario, senha_usuario, nome_usuario, cpf_usuario, imagem_usuario)
+    VALUES (v_id_usuario, v_email_usuario, v_senha_usuario, v_nome_usuario, v_cpf_usuario, v_imagem_usuario);
     
     COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Dados inseridos com sucesso. ID da Pessoa: ' || v_id_pessoa);
+    DBMS_OUTPUT.PUT_LINE('Usuário inserido com sucesso. ID do Usuário: ' || v_id_usuario);
 
 EXCEPTION
     WHEN OTHERS THEN
@@ -126,142 +112,26 @@ EXCEPTION
         ROLLBACK;
 END;
 
-SELECT * FROM PESSOA;
-
-// PessoaFisica
-
-DECLARE
-    v_cpf_pf Pessoa_Fisica.cpf_pf%TYPE;
-    v_id_pessoa Pessoa_Fisica.id_pessoa%TYPE;
-    v_contagem NUMBER;
-
-BEGIN
-    v_cpf_pf := '&cpf_pf';
-    v_id_pessoa := &id_pessoa;
-
-    IF LENGTH(v_cpf_pf) != 11 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'CPF deve ter 11 dígitos.');
-    END IF;
-
-    SELECT COUNT(*) INTO v_contagem FROM Pessoa_Fisica WHERE id_pessoa = v_id_pessoa;
-    IF v_contagem > 0 THEN
-        RAISE_APPLICATION_ERROR(-20002, 'Este ID de pessoa já está associado a uma Pessoa Física.');
-    END IF;
-
-    INSERT INTO Pessoa_Fisica (cpf_pf, id_pessoa)
-    VALUES (v_cpf_pf, v_id_pessoa);
-    
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Dados inseridos com sucesso. CPF: ' || v_cpf_pf);
-
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-        ROLLBACK;
-END;
-
-SELECT * FROM Pessoa_Fisica;
-
-// UF
-
-CREATE SEQUENCE seq_uf
-START WITH 1
-INCREMENT BY 1;
-
-DECLARE
-    v_sigla_uf Uf.sigla_uf%TYPE;
-    v_id_uf Uf.id_uf%TYPE;
-    v_contagem NUMBER;
-
-BEGIN
-    SELECT seq_uf.NEXTVAL INTO v_id_uf FROM DUAL;
-
-    v_sigla_uf := '&sigla_uf';
-
-    SELECT COUNT(*) INTO v_contagem FROM Uf WHERE sigla_uf = UPPER(v_sigla_uf);
-    IF v_contagem > 0 THEN
-        RAISE_APPLICATION_ERROR(-20003, 'Esta sigla de UF já existe.');
-    END IF;
-
-    INSERT INTO Uf (id_uf, sigla_uf)
-    VALUES (v_id_uf, UPPER(v_sigla_uf));
-    
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Dados inseridos com sucesso. Sigla da UF: ' || v_sigla_uf);
-
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-        ROLLBACK;
-END;
-
-SELECT * FROM Uf;
-
-// TipoRegistro
-
-CREATE SEQUENCE seq_tipo_registro
-START WITH 1
-INCREMENT BY 1;
-
-DECLARE
-    v_nome_tipo_registro Tipo_Registro.nome_tipo_registro%TYPE;
-    v_id_tipo_registro Tipo_Registro.id_tipo_registro%TYPE;
-    v_contagem NUMBER;
-
-BEGIN
-    SELECT seq_tipo_registro.NEXTVAL INTO v_id_tipo_registro FROM DUAL;
-
-    v_nome_tipo_registro := '&nome_tipo_registro';
-
-    SELECT COUNT(*) INTO v_contagem FROM Tipo_Registro WHERE UPPER(nome_tipo_registro) = UPPER(v_nome_tipo_registro);
-    IF v_contagem > 0 THEN
-        RAISE_APPLICATION_ERROR(-20004, 'Este nome de Tipo de Registro já existe.');
-    END IF;
-
-    INSERT INTO Tipo_Registro (id_tipo_registro, nome_tipo_registro)
-    VALUES (v_id_tipo_registro, v_nome_tipo_registro);
-    
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Dados inseridos com sucesso. ID do Tipo de Registro: ' || v_id_tipo_registro);
-
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-        ROLLBACK;
-END;
-
-SELECT * FROM Tipo_Registro;
-
-
-// Registro
-
-CREATE SEQUENCE seq_registro
-START WITH 1
-INCREMENT BY 1;
+-- 02.02 Registro
+CREATE SEQUENCE seq_registro START WITH 1 INCREMENT BY 1;
 
 DECLARE
     v_numero_registro Registro.numero_registro%TYPE;
-    v_id_uf Registro.id_uf%TYPE;
-    v_id_tipo_registro Registro.id_tipo_registro%TYPE;
-    v_id_pessoa Registro.id_pessoa%TYPE;
+    v_uf_registro Registro.uf_registro%TYPE;
+    v_tipo_registro Registro.tipo_registro%TYPE;
+    v_id_usuario Registro.id_usuario%TYPE;
     v_id_registro Registro.id_registro%TYPE;
-    v_contagem NUMBER;
 
 BEGIN
     SELECT seq_registro.NEXTVAL INTO v_id_registro FROM DUAL;
 
     v_numero_registro := '&numero_registro';
-    v_id_uf := &id_uf;
-    v_id_tipo_registro := &id_tipo_registro;
-    v_id_pessoa := &id_pessoa;
+    v_uf_registro := '&uf_registro';
+    v_tipo_registro := '&tipo_registro';
+    v_id_usuario := &id_usuario;
 
-    SELECT COUNT(*) INTO v_contagem FROM Registro WHERE id_pessoa = v_id_pessoa;
-    IF v_contagem > 0 THEN
-        RAISE_APPLICATION_ERROR(-20005, 'Este ID de Pessoa já está associado a um Registro.');
-    END IF;
-
-    INSERT INTO Registro (id_registro, numero_registro, id_uf, id_tipo_registro, id_pessoa)
-    VALUES (v_id_registro, v_numero_registro, v_id_uf, v_id_tipo_registro, v_id_pessoa);
+    INSERT INTO Registro (id_registro, numero_registro, uf_registro, tipo_registro, id_usuario)
+    VALUES (v_id_registro, v_numero_registro, v_uf_registro, v_tipo_registro, v_id_usuario);
     
     COMMIT;
     DBMS_OUTPUT.PUT_LINE('Dados inseridos com sucesso. ID do Registro: ' || v_id_registro);
@@ -272,14 +142,50 @@ EXCEPTION
         ROLLBACK;
 END;
 
-SELECT * FROM Registro;
+-- 02.03. Feedback
+CREATE SEQUENCE seq_feedback START WITH 1 INCREMENT BY 1;
 
+DECLARE
+    v_data_feedback Feedback.data_feedback%TYPE;
+    v_titulo_feedback Feedback.titulo_feedback%TYPE;
+    v_descricao_feedback Feedback.descricao_feedback%TYPE;
+    v_nota_feedback Feedback.nota_feedback%TYPE;
+    v_id_paciente Feedback.id_paciente%TYPE;
+    v_id_registro Feedback.id_registro%TYPE;
+    v_is_anonimo Feedback.is_anonimo%TYPE;
+    v_acao_tomada_feedback Feedback.acao_tomada_feedback%TYPE;
+    v_evidencia_feedback Feedback.evidencia_feedback%TYPE;
+    v_tipo_feedback Feedback.tipo_feedback%TYPE;
+    v_id_feedback Feedback.id_feedback%TYPE;
 
-// Especialidade
+BEGIN
+    SELECT seq_feedback.NEXTVAL INTO v_id_feedback FROM DUAL;
 
-CREATE SEQUENCE seq_especialidade
-START WITH 1
-INCREMENT BY 1;
+    v_data_feedback := TO_DATE('&data_feedback', 'DD/MM/YYYY');
+    v_titulo_feedback := '&titulo_feedback';
+    v_descricao_feedback := '&descricao_feedback';
+    v_nota_feedback := &nota_feedback;
+    v_id_paciente := &id_paciente;
+    v_id_registro := &id_registro;
+    v_is_anonimo := &is_anonimo;
+    v_acao_tomada_feedback := '&acao_tomada_feedback';
+    v_evidencia_feedback := '&evidencia_feedback';
+    v_tipo_feedback := '&tipo_feedback';
+
+    INSERT INTO Feedback (id_feedback, data_feedback, titulo_feedback, descricao_feedback, nota_feedback, id_paciente, id_registro, is_anonimo, acao_tomada_feedback, evidencia_feedback, tipo_feedback)
+    VALUES (v_id_feedback, v_data_feedback, v_titulo_feedback, v_descricao_feedback, v_nota_feedback, v_id_paciente, v_id_registro, v_is_anonimo, v_acao_tomada_feedback, v_evidencia_feedback, v_tipo_feedback);
+    
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Feedback inserido com sucesso. ID do Feedback: ' || v_id_feedback);
+
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
+        ROLLBACK;
+END;
+
+-- 02.04. Especialidade
+CREATE SEQUENCE seq_especialidade START WITH 1 INCREMENT BY 1;
 
 DECLARE
     v_nome_especialidade Especialidade.nome_especialidade%TYPE;
@@ -308,13 +214,8 @@ EXCEPTION
         ROLLBACK;
 END;
 
-SELECT * FROM Especialidade;
-
-// RegistroEspecialidade
-
-CREATE SEQUENCE seq_registro_especialidade
-START WITH 1
-INCREMENT BY 1;
+-- 02.05. Registro_Especialidade
+CREATE SEQUENCE seq_registro_especialidade START WITH 1 INCREMENT BY 1;
 
 DECLARE
     v_id_registro Registro_Especialidade.id_registro%TYPE;
@@ -344,105 +245,8 @@ EXCEPTION
         ROLLBACK;
 END;
 
-SELECT * FROM Registro_Especialidade;
-
-// Usuario
-
-CREATE SEQUENCE seq_usuario
-START WITH 1
-INCREMENT BY 1;
-
-DECLARE
-    v_email_usuario Usuario.email_usuario%TYPE;
-    v_senha_usuario Usuario.senha_usuario%TYPE;
-    v_id_pessoa Usuario.id_pessoa%TYPE;
-    v_id_usuario Usuario.id_usuario%TYPE;
-    v_contagem_email NUMBER;
-    v_contagem_pessoa NUMBER;
-
-BEGIN
-    SELECT seq_usuario.NEXTVAL INTO v_id_usuario FROM DUAL;
-
-    v_email_usuario := '&email_usuario';
-    v_senha_usuario := '&senha_usuario';
-    v_id_pessoa := &id_pessoa;
-
-    SELECT COUNT(*) INTO v_contagem_email FROM Usuario WHERE email_usuario = v_email_usuario;
-    IF v_contagem_email > 0 THEN
-        RAISE_APPLICATION_ERROR(-20008, 'Este email já está cadastrado para um usuário.');
-    END IF;
-
-    SELECT COUNT(*) INTO v_contagem_pessoa FROM Usuario WHERE id_pessoa = v_id_pessoa;
-    IF v_contagem_pessoa > 0 THEN
-        RAISE_APPLICATION_ERROR(-20009, 'Este ID de pessoa já está associado a um usuário.');
-    END IF;
-
-    INSERT INTO Usuario (id_usuario, email_usuario, senha_usuario, id_pessoa)
-    VALUES (v_id_usuario, v_email_usuario, v_senha_usuario, v_id_pessoa);
-    
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Usuário inserido com sucesso. ID do Usuário: ' || v_id_usuario);
-
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-        ROLLBACK;
-END;
-
-SELECT * FROM Usuario;
-
-// Feedback
-
-CREATE SEQUENCE seq_feedback
-START WITH 1
-INCREMENT BY 1;
-
-DECLARE
-    v_data_feedback Feedback.data_feedback%TYPE;
-    v_titulo_feedback Feedback.titulo_feedback%TYPE;
-    v_descricao_feedback Feedback.descricao_feedback%TYPE;
-    v_nota_feedback Feedback.nota_feedback%TYPE;
-    v_id_paciente NUMBER;
-    v_id_registro Feedback.id_registro%TYPE;
-    v_is_anonimo Feedback.is_anonimo%TYPE;
-    v_id_feedback Feedback.id_feedback%TYPE;
-    v_contagem_registro NUMBER;
-
-BEGIN
-    SELECT seq_feedback.NEXTVAL INTO v_id_feedback FROM DUAL;
-
-    v_data_feedback := TO_DATE('&data_feedback', 'DD/MM/YYYY');
-    v_titulo_feedback := '&titulo_feedback';
-    v_descricao_feedback := '&descricao_feedback';
-    v_nota_feedback := &nota_feedback;
-    v_id_paciente := &id_paciente;
-    v_id_registro := &id_registro; 
-    v_is_anonimo := &is_anonimo;
-
-    SELECT COUNT(*) INTO v_contagem_registro FROM Registro WHERE id_pessoa = v_id_paciente;
-    IF v_contagem_registro > 0 THEN
-        RAISE_APPLICATION_ERROR(-20010, 'Este ID de Pessoa está associado a um médico e não pode dar feedback como paciente.');
-    END IF;
-
-    INSERT INTO Feedback (id_feedback, data_feedback, titulo_feedback, descricao_feedback, nota_feedback, id_paciente, id_registro, is_anonimo)
-    VALUES (v_id_feedback, v_data_feedback, v_titulo_feedback, v_descricao_feedback, v_nota_feedback, v_id_paciente, v_id_registro, v_is_anonimo);
-    
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Feedback inserido com sucesso. ID do Feedback: ' || v_id_feedback);
-
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-        ROLLBACK;
-END;
-
-SELECT * FROM Feedback;
-
-// Resposta
-
-CREATE SEQUENCE seq_resposta
-START WITH 1
-INCREMENT BY 1;
+-- 02.06. Resposta
+CREATE SEQUENCE seq_resposta START WITH 1 INCREMENT BY 1;
 
 DECLARE
     v_data_resposta Resposta.data_resposta%TYPE;
@@ -450,8 +254,6 @@ DECLARE
     v_id_usuario Resposta.id_usuario%TYPE;
     v_id_feedback Resposta.id_feedback%TYPE;
     v_id_resposta Resposta.id_resposta%TYPE;
-    v_id_pessoa NUMBER;
-    v_contagem_registro NUMBER;
 
 BEGIN
     SELECT seq_resposta.NEXTVAL INTO v_id_resposta FROM DUAL;
@@ -460,13 +262,6 @@ BEGIN
     v_descricao_resposta := '&descricao_resposta';
     v_id_usuario := &id_usuario;
     v_id_feedback := &id_feedback;
-
-    SELECT id_pessoa INTO v_id_pessoa FROM Usuario WHERE id_usuario = v_id_usuario;
-    SELECT COUNT(*) INTO v_contagem_registro FROM Registro WHERE id_pessoa = v_id_pessoa;
-
-    IF v_contagem_registro = 0 THEN
-        RAISE_APPLICATION_ERROR(-20012, 'O usuário não está associado a um médico e não pode responder.');
-    END IF;
 
     INSERT INTO Resposta (id_resposta, data_resposta, descricao_resposta, id_usuario, id_feedback)
     VALUES (v_id_resposta, v_data_resposta, v_descricao_resposta, v_id_usuario, v_id_feedback);
@@ -480,83 +275,16 @@ EXCEPTION
         ROLLBACK;
 END;
 
-SELECT * FROM Resposta;
+-- 03. Relatórios
 
-// TipoDenuncia
-
-CREATE SEQUENCE seq_tipo_denuncia
-START WITH 1
-INCREMENT BY 1;
-
-DECLARE
-    v_nome_tipo_denuncia Tipo_Denuncia.nome_tipo_denuncia%TYPE;
-    v_id_tipo_denuncia Tipo_Denuncia.id_tipo_denuncia%TYPE;
-    v_contagem NUMBER;
-
-BEGIN
-    SELECT seq_tipo_denuncia.NEXTVAL INTO v_id_tipo_denuncia FROM DUAL;
-
-    v_nome_tipo_denuncia := '&nome_tipo_denuncia';
-
-    SELECT COUNT(*) INTO v_contagem FROM Tipo_Denuncia WHERE UPPER(nome_tipo_denuncia) = UPPER(v_nome_tipo_denuncia);
-    IF v_contagem > 0 THEN
-        RAISE_APPLICATION_ERROR(-20013, 'Este nome de Tipo de Denúncia já existe.');
-    END IF;
-
-    INSERT INTO Tipo_Denuncia (id_tipo_denuncia, nome_tipo_denuncia)
-    VALUES (v_id_tipo_denuncia, v_nome_tipo_denuncia);
-    
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Tipo de Denúncia inserido com sucesso. ID do Tipo de Denúncia: ' || v_id_tipo_denuncia);
-
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-        ROLLBACK;
-END;
-
-SELECT * FROM Tipo_Denuncia;
-
-// Denuncia
-
-CREATE SEQUENCE seq_denuncia
-START WITH 1
-INCREMENT BY 1;
-
-DECLARE
-    v_id_tipo_denuncia Denuncia.id_tipo_denuncia%TYPE;
-    v_acao_tomada_denuncia Denuncia.acao_tomada_denuncia%TYPE;
-    v_evidencia_denuncia Denuncia.evidencia_denuncia%TYPE;
-    v_id_feedback Denuncia.id_feedback%TYPE;
-
-BEGIN
-    v_id_tipo_denuncia := &id_tipo_denuncia;
-    v_acao_tomada_denuncia := '&acao_tomada_denuncia';
-    v_evidencia_denuncia := '&evidencia_denuncia';
-    v_id_feedback := &id_feedback;
-
-    INSERT INTO Denuncia (id_tipo_denuncia, acao_tomada_denuncia, evidencia_denuncia, id_feedback)
-    VALUES (v_id_tipo_denuncia, v_acao_tomada_denuncia, v_evidencia_denuncia, v_id_feedback);
-    
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Denúncia inserida com sucesso.');
-
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('Ocorreu um erro: ' || SQLERRM);
-        ROLLBACK;
-END;
-
-SELECT * FROM Denuncia;
-
--- 3. Relatórios
-
-//1 Relatório de Feedbacks e suas Respostas Correspondentes
+-- 03.01. Relatório de Feedbacks e suas Respostas Correspondentes
 DECLARE
     CURSOR c_feedbacks IS
-        SELECT * FROM Feedback;
-    
-    v_feedback Feedback%ROWTYPE;
+        SELECT f.id_feedback, f.titulo_feedback, f.descricao_feedback, u.nome_usuario AS nome_paciente
+        FROM Feedback f
+        JOIN Usuario u ON f.id_paciente = u.id_usuario;
+
+    v_feedback c_feedbacks%ROWTYPE;
 
 BEGIN
     OPEN c_feedbacks;
@@ -565,13 +293,16 @@ BEGIN
         FETCH c_feedbacks INTO v_feedback;
         EXIT WHEN c_feedbacks%NOTFOUND;
 
-        DBMS_OUTPUT.PUT_LINE('Feedback ID: ' || v_feedback.id_feedback || ' - Título: ' || v_feedback.titulo_feedback);
+        DBMS_OUTPUT.PUT_LINE('Feedback ID: ' || v_feedback.id_feedback || ' - Título: ' || v_feedback.titulo_feedback || ' - Paciente: ' || v_feedback.nome_paciente);
 
         DECLARE
             CURSOR c_respostas IS
-                SELECT * FROM Resposta WHERE id_feedback = v_feedback.id_feedback;
+                SELECT r.descricao_resposta, u.nome_usuario AS nome_respondente
+                FROM Resposta r
+                JOIN Usuario u ON r.id_usuario = u.id_usuario
+                WHERE r.id_feedback = v_feedback.id_feedback;
 
-            v_resposta Resposta%ROWTYPE;
+            v_resposta c_respostas%ROWTYPE;
         BEGIN
             OPEN c_respostas;
 
@@ -579,7 +310,7 @@ BEGIN
                 FETCH c_respostas INTO v_resposta;
                 EXIT WHEN c_respostas%NOTFOUND;
 
-                DBMS_OUTPUT.PUT_LINE('    Resposta ID: ' || v_resposta.id_resposta || ' - Descrição: ' || v_resposta.descricao_resposta);
+                DBMS_OUTPUT.PUT_LINE('    Resposta: ' || v_resposta.descricao_resposta || ' - Respondente: ' || v_resposta.nome_respondente);
             END LOOP;
 
             CLOSE c_respostas;
@@ -589,42 +320,45 @@ BEGIN
     CLOSE c_feedbacks;
 END;
 
-//2 Relatório de Detalhes de Respostas para um Feedback Específico
+-- 03.02. Relatório de Registros e Especialidades Associadas
 DECLARE
-    v_id_feedback NUMBER := &id_feedback; -- Substitua pelo ID do feedback
+    CURSOR c_registros IS
+        SELECT r.id_registro, r.numero_registro, r.tipo_registro, u.nome_usuario AS nome_usuario
+        FROM Registro r
+        JOIN Usuario u ON r.id_usuario = u.id_usuario;
 
-    CURSOR c_respostas_feedback IS
-        SELECT * FROM Resposta WHERE id_feedback = v_id_feedback;
-
-    v_resposta Resposta%ROWTYPE;
+    v_registro c_registros%ROWTYPE;
 
 BEGIN
-    OPEN c_respostas_feedback;
+    OPEN c_registros;
 
     LOOP
-        FETCH c_respostas_feedback INTO v_resposta;
-        EXIT WHEN c_respostas_feedback%NOTFOUND;
+        FETCH c_registros INTO v_registro;
+        EXIT WHEN c_registros%NOTFOUND;
 
-        DBMS_OUTPUT.PUT_LINE('Resposta ID: ' || v_resposta.id_resposta || ' - Descrição: ' || v_resposta.descricao_resposta);
+        DBMS_OUTPUT.PUT_LINE('Registro ID: ' || v_registro.id_registro || ' - Número: ' || v_registro.numero_registro || ' - Tipo: ' || v_registro.tipo_registro || ' - Usuário: ' || v_registro.nome_usuario);
+
+        DECLARE
+            CURSOR c_especialidades IS
+                SELECT e.nome_especialidade
+                FROM Registro_Especialidade re
+                JOIN Especialidade e ON re.id_especialidade = e.id_especialidade
+                WHERE re.id_registro = v_registro.id_registro;
+
+            v_especialidade c_especialidades%ROWTYPE;
+        BEGIN
+            OPEN c_especialidades;
+
+            LOOP
+                FETCH c_especialidades INTO v_especialidade;
+                EXIT WHEN c_especialidades%NOTFOUND;
+
+                DBMS_OUTPUT.PUT_LINE('    Especialidade: ' || v_especialidade.nome_especialidade);
+            END LOOP;
+
+            CLOSE c_especialidades;
+        END;
     END LOOP;
 
-    CLOSE c_respostas_feedback;
+    CLOSE c_registros;
 END;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

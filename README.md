@@ -178,95 +178,51 @@ $ yarn start
   </p>
 
   ### Tabelas e Relacionamentos
-  
-  #### `Pessoa`
-  - **Descrição**: Armazena informações básicas das pessoas.
-  - **Chave Primária**: `id_pessoa`
-  - **Atributos**: `nome_pessoa`, `imagem_pessoa`
-  - **Restrições**: `nome_pessoa` não pode ser nulo.
 
-  #### `Pessoa Física`
-  - **Descrição**: Representa uma extensão da tabela `Pessoa` para indivíduos, com informações adicionais específicas para pessoas físicas.
-  - **Atributos**: `cpf_pf`
-  - **Relacionamentos**: Cada `Pessoa Física` é uma `Pessoa`.
-  - **Restrições**: `cpf_pf` deve ser único e não nulo; deve existir uma correspondência em `Pessoa` para cada `Pessoa Física`.
-
-  #### `UF`
-  - **Descrição**: Armazena as siglas dos estados federativos (Unidades Federativas).
-  - **Chave Primária**: `id_uf`
-  - **Atributos**: `sigla_uf`
-  - **Relacionamentos**: Associado à tabela `Registro`, onde cada registro é categorizado com um `id_uf` correspondente.
-  - **Restrições**: `sigla_uf` deve ser única e não nula.
+  #### `Usuario`
+  - **Descrição**: Armazena informações dos usuários do sistema.
+  - **Chave Primária**: `id_usuario`
+  - **Atributos**: `email_usuario`, `senha_usuario`, `nome_usuario`, `cpf_usuario`, `imagem_usuario`
+  - **Restrições**: `email_usuario` e `cpf_usuario` devem ser únicos e não nulos; `senha_usuario` e `nome_usuario` não podem ser nulos.
   
   #### `Registro`
-  - **Descrição**: Registra os dados do registro de profissionais de saúde junto ao seu devido Conselho Regional.
+  - **Descrição**: Registra os dados do registro de profissionais de saúde.
   - **Chave Primária**: `id_registro`
-  - **Atributos**: `numero_registro`, `id_tipo_registro`, `id_pessoa` e `id_uf` 
+  - **Atributos**: `numero_registro`, `uf_registro`, `tipo_registro`, `id_usuario`
+  - **Relacionamentos**: Relacionado com `Usuario` pela chave `id_usuario`.
+  - **Restrições**: A combinação de `numero_registro`, `uf_registro`, `tipo_registro` deve ser única.
+  
+  #### `Feedback`
+  - **Descrição**: Armazena feedbacks de usuários sobre serviços ou experiências.
+  - **Chave Primária**: `id_feedback`
+  - **Atributos**: `data_feedback`, `titulo_feedback`, `descricao_feedback`, `nota_feedback`, `id_paciente`, `id_registro`, `is_anonimo`, `acao_tomada_feedback`, `evidencia_feedback`, `tipo_feedback`
   - **Relacionamentos**: 
-    - Relacionado com `Pessoa` pela chave `id_pessoa`.
-    - Relacionado com `Tipo_Registro` pela chave `id_tipo_registro`.
-    - Relacionado com `UF` pela chave `id_uf`.
-   
-  #### `Tipo_Registro`
-  - **Descrição**: Define os diferentes tipos de registros profissionais utilizados para identificar a categoria de profissionais da saúde, como CRM para médicos, CRF para farmacêuticos, entre outros.
-  - **Chave Primária**: `id_tipo_registro`
-  - **Atributos**: `nome_tipo_registro`
-  - **Relacionamentos**: Associado à tabela `Registro`, onde cada registro é categorizado com um `id_tipo_registro` correspondente.
-  - **Restrições**: `nome_tipo_registro` deve ser único e não nulo.
+    - Relacionado com `Usuario` pela chave `id_paciente`.
+    - Relacionado com `Registro` pela chave `id_registro`.
+  - **Restrições**: `data_feedback`, `titulo_feedback`, `descricao_feedback`, `nota_feedback`, `id_paciente`, `id_registro`, `is_anonimo` e `tipo_feedback` não podem ser nulos.
   
   #### `Especialidade`
   - **Descrição**: Categorias de especialização dos profissionais de saúde.
   - **Chave Primária**: `id_especialidade`
   - **Atributos**: `nome_especialidade`
-  - **Relacionamentos**: Associado a `Registro_Especialidade` que liga registros a suas especialidades.
   - **Restrições**: `nome_especialidade` deve ser único e não nulo.
-
+  
   #### `Registro_Especialidade`
-  - **Descrição**: Associa registros de profissionais a suas respectivas especialidades médicas. Esta tabela é uma tabela de junção entre `Registro` e `Especialidade`.
-  - **Chaves Primárias Compostas**: `id_registro`, `id_especialidade`
-  - **Atributos**: `id_registro`, `id_especialidade`
+  - **Descrição**: Associa registros de profissionais a suas respectivas especialidades médicas.
+  - **Chaves Estrangeiras**: `id_registro`, `id_especialidade`
   - **Relacionamentos**: 
-    - `id_registro` é uma chave estrangeira que referencia `Registro`.
-    - `id_especialidade` é uma chave estrangeira que referencia `Especialidade`.
-  - **Restrições**: A combinação de `id_registro` e `id_especialidade` deve ser única para evitar duplicatas.
-  
-  #### `Usuário`
-  - **Descrição**: Armazena informações dos usuários do sistema.
-  - **Chave Primária**: `id_usuario`
-  - **Atributos**: `email_usuario`, `senha_usuario`, `id_pessoa`
-  - **Relacionamentos**: Cada `id_pessoa` de `Pessoa` corresponde a um `id_usuario` em `Usuário`.
-  - **Restrições**: `email_usuario` deve ser único e não nulo; `senha_usuario` não pode ser nulo.
-  
-  #### `Feedback`
-  - **Descrição**: Armazena feedbacks dos pacientes sobre profissionais de saúde.
-  - **Chave Primária**: `id_feedback`
-  - **Atributos**: `data_feedback`, `descricao_feedback`, `nota_feedback`, `id_paciente`, `id_registro`, `is_anonimo`
-  - **Relacionamentos**: 
-    - Relacionado com `Registro` pela chave `id_registro`.
-    - Relacionado com `Pessoa` pela chave `id_paciente` que é um `id_pessoa`.
-  - **Restrições**: `id_paciente`, `id_registro` e `is_anonimo` não podem ser nulos. 
-  
-  #### `Denuncia`
-  - **Descrição**: Armazena denúncias sobre profissionais de saúde.
-  - **Chave Primária**: `id_denuncia`
-  - **Atributos**: `acao_tomada_denuncia`, `evidencia_denuncia`, `id_tipo_denuncia`
-  - **Relacionamentos**: Associado a `Tipo_Denuncia` pela chave `id_tipo_denuncia`.
-  
-  #### `Tipo_Denuncia`
-  - **Descrição**: Categoriza os tipos de denúncias que podem ser feitas.
-  - **Chave Primária**: `id_tipo_denuncia`
-  - **Atributos**: `nome_tipo_denuncia`
-  - **Relacionamentos**: Associado à tabela `Denuncia`, onde cada denúncia é categorizado com um `id_tipo_denuncia` correspondente.
-  - **Restrições**: `nome_tipo_denuncia` deve ser único e não nulo.
+    - `id_registro` referencia `Registro`.
+    - `id_especialidade` referencia `Especialidade`.
+  - **Restrições**: A combinação de `id_registro` e `id_especialidade` deve ser única.
   
   #### `Resposta`
-  - **Descrição**: Armazena respostas dos profissionais a feedbacks.
+  - **Descrição**: Armazena respostas aos feedbacks dados pelos usuários.
   - **Chave Primária**: `id_resposta`
   - **Atributos**: `data_resposta`, `descricao_resposta`, `id_usuario`, `id_feedback`
   - **Relacionamentos**: 
+    - Relacionado com `Usuario` pela chave `id_usuario`.
     - Relacionado com `Feedback` pela chave `id_feedback`.
-    - Relacionado com `Usuário` pela chave `id_usuario`.
-  - **Restrições**: `id_feedback` e `id_usuario` não podem ser nulos.
+  - **Restrições**: `data_resposta`, `descricao_resposta`, `id_usuario`, `id_feedback` não podem ser nulos.
   </details>
 
   <details>

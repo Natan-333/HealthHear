@@ -1,0 +1,52 @@
+package br.com.fiap.health.hear.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
+import lombok.*;
+
+import java.util.Set;
+
+@Getter
+@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Entity
+@Table(name = "ESPECIALIDADE", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_NOME_ESPECIALIDADE", columnNames = "NOME_ESPECIALIDADE")
+})
+public class Especialidade {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ESPECIALIDADE")
+    @SequenceGenerator(name = "SQ_ESPECIALIDADE", sequenceName = "SQ_ESPECIALIDADE", allocationSize = 1)
+    @Column(name = "ID_ESPECIALIDADE")
+    private Long id;
+
+    @Column(name = "NOME_ESPECIALIDADE", nullable = false)
+    @NotBlank(message = "O nome da especialidade não pode estar vazio.")
+    private String nome;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "REGISTRO_ESPECIALIDADE",
+            joinColumns = {
+                    @JoinColumn(
+                            name = "ID_ESPECIALIDADE",
+                            referencedColumnName = "ID_ESPECIALIDADE",
+                            foreignKey = @ForeignKey(name = "FK_REGISTRO_ESPECIALIDADE_ESPECIALIDADE")
+                    )
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            name = "ID_REGISTRO",
+                            referencedColumnName = "ID_REGISTRO",
+                            foreignKey = @ForeignKey(name = "FK_REGISTRO_ESPECIALIDADE_REGISTRO")
+                    )
+            }
+    )
+    private Set<Registro> registros;
+
+
+}

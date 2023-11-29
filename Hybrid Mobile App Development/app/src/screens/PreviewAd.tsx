@@ -144,7 +144,7 @@ export function PreviewAd() {
 
       <AdDetails {...params} />
 
-      <HStack w='full' safeAreaBottom bg='white' pt='6' px='6'>
+      <HStack w='full' safeAreaBottom bg='white' p='3' px='6'>
         <Button
           title='Voltar e editar'
           flex={1}

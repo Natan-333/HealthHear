@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Platform, TouchableOpacity } from 'react-native';
 import {
   VStack,
@@ -42,6 +42,7 @@ import { api } from '@services/api';
 
 // Hook import
 import { useAuth } from '@hooks/useAuth';
+import { TextInput } from 'react-native-gesture-handler';
 
 type PhotoProps = {
   name: string;
@@ -52,6 +53,8 @@ type PhotoProps = {
 const PHOTO_SIZE = 20;
 
 export function SignUp() {
+  // Hook
+  const { signIn } = useAuth();
   const navigation = useNavigation();
   const { colors, sizes } = useTheme();
   const toast = useToast();
@@ -63,16 +66,13 @@ export function SignUp() {
     resolver: yupResolver(signUpSchema),
   });
 
-  const { signIn } = useAuth();
-
+  // State
   const [photo, setPhoto] = useState<PhotoProps>({} as PhotoProps);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [passwordIsVisible, setPasswordIsVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleGoBack() {
-    navigation.goBack();
-  }
+  const handleGoBack = () => navigation.goBack();
 
   async function handleSignUp(data: SignUpFormData) {
     try {
@@ -92,7 +92,7 @@ export function SignUp() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      
+
       await signIn(email, password);
     } catch (error) {
       const isAppError = error instanceof AppError;

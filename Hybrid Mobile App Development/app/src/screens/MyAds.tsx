@@ -27,8 +27,8 @@ export function MyAds() {
   const [filterIsOpened, setFilterIsOpened] = useState(false);
   const [data, setData] = useState<IProduct[]>([] as IProduct[]);
 
-  function handleOpenCreateAd() {
-    navigate('createAd');
+  function handleOpenCreateFeedback() {
+    navigate('CreateFeedback');
   }
 
   useEffect(() => {
@@ -47,10 +47,10 @@ export function MyAds() {
     <VStack flex={1} px='6' safeAreaTop>
       <HStack alignItems='center' justifyContent='center' mt='2' mb='4'>
         <Text fontFamily='bold' fontSize='lg+' color='gray.700'>
-          Meus anúncios
+          Meus feedbacks
         </Text>
 
-        <Pressable position='absolute' right={0} onPress={handleOpenCreateAd}>
+        <Pressable position='absolute' right={0} onPress={handleOpenCreateFeedback}>
           <Plus size={sizes[6]} color={colors.gray[700]} weight='bold' />
         </Pressable>
       </HStack>

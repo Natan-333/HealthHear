@@ -1,21 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { UserPhoto } from '@components/UserPhoto';
 import {
-  Center,
   Divider,
   FlatList,
   Flex,
   HStack,
   Pressable,
   Skeleton,
-  Switch,
   Text,
   useTheme,
   useToast,
-  View,
   VStack,
 } from 'native-base';
-import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
 import { Button } from '@components/Button';
 import {
   Plus,
@@ -75,8 +71,8 @@ export function Home() {
     modalizeRef.current?.close();
   }
 
-  function handleOpenCreateAd() {
-    navigate('createAd');
+  function handleOpenCreateFeedback() {
+    navigate('CreateFeedback');
   }
 
   function handleNavigateToMyAds() {
@@ -218,15 +214,15 @@ export function Home() {
 
         <Button
           flex={1}
-          title='Criar anúncio'
+          title='Criar feedback'
           bgColor='gray.700'
           leftIcon={<Plus size={16} color={colors.gray[200]} />}
-          onPress={handleOpenCreateAd}
+          onPress={handleOpenCreateFeedback}
         />
       </HStack>
 
       <Text color='gray.500' fontSize='sm' fontFamily='regular' mt='6' mb='2'>
-        Seus produtos anunciados para venda
+        Seus feedbacks cadastrado
       </Text>
 
       {isFetchLoading && userProducts.length <= 0 ? (
@@ -253,7 +249,7 @@ export function Home() {
               {countActiveAds()}
             </Text>
             <Text color='gray.600' fontSize='xs' fontFamily='regular'>
-              anúncios ativos
+              Feedbacks ativos
             </Text>
           </VStack>
 
@@ -263,7 +259,7 @@ export function Home() {
             fontFamily='bold'
             marginRight='2'
           >
-            Meus anúncios
+            Meus feedbacks
           </Text>
 
           <ArrowRight size={16} color={colors.blue[700]} />
@@ -271,11 +267,11 @@ export function Home() {
       )}
 
       <Text color='gray.500' fontSize='sm' fontFamily='regular' mt='6' mb='2'>
-        Compre produtos variados
+        Procure por profissionais
       </Text>
 
       <Input
-        placeholder='Buscar anúncio'
+        placeholder='Buscar'
         autoComplete='off'
         autoCorrect={false}
         value={search}
@@ -348,7 +344,7 @@ export function Home() {
           HeaderComponent={
             <HStack mt='10' alignItems='center' justifyContent='space-between'>
               <Text fontFamily='bold' fontSize='lg+' color='gray.700'>
-                Filtrar anúncios
+                Filtrar feedbacks
               </Text>
 
               <Pressable px='4' onPress={handleCloseModalize}>
@@ -383,24 +379,6 @@ export function Home() {
                 onPress={() => handleIsNew(false)}
               />
             </HStack>
-
-            <Text
-              fontSize='sm'
-              fontFamily='bold'
-              color='gray.600'
-              mt={6}
-              mb={3}
-            >
-              Aceita troca?
-            </Text>
-            <Switch
-              size='sm'
-              alignSelf='flex-start'
-              offTrackColor='gray.300'
-              onTrackColor='blue.400'
-              isChecked={acceptTrade === null ? false : acceptTrade}
-              onToggle={setAcceptTrade}
-            />
 
             <Text
               fontSize='sm'

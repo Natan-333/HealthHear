@@ -62,7 +62,7 @@ export function AdDetails() {
   }
 
   function handleNavigateToEditAd() {
-    navigate('createAd', data);
+    navigate('CreateFeedback', data);
   }
 
   async function handleOpenWhatsApp() {
@@ -91,7 +91,7 @@ export function AdDetails() {
       const isAppError = error instanceof AppError;
       const title = isAppError
         ? error.message
-        : 'Não foi possível excluir o anúncio. Tente novamente mais tarde.';
+        : 'Não foi possível excluir o feedback. Tente novamente mais tarde.';
 
       toast.show({
         title,
@@ -118,7 +118,7 @@ export function AdDetails() {
       const isAppError = error instanceof AppError;
       const title = isAppError
         ? error.message
-        : 'Não foi possível desativar o anúncio. Tente novamente mais tarde.';
+        : 'Não foi possível desativar o feedback. Tente novamente mais tarde.';
 
       toast.show({
         title,
@@ -142,7 +142,7 @@ export function AdDetails() {
       const isAppError = error instanceof AppError;
       const title = isAppError
         ? error.message
-        : 'Não foi possível carregar o anúncio. Tente novamente mais tarde.';
+        : 'Não foi possível carregar o feedback. Tente novamente mais tarde.';
 
       toast.show({
         title,
@@ -189,7 +189,7 @@ export function AdDetails() {
         <VStack safeAreaBottom pt='6' pb='3' px='6' style={{ gap: 4 }}>
           <Button
             alignSelf='center'
-            title={is_active ? 'Desativar anúncio' : 'Reativar anúncio'}
+            title={is_active ? 'Desativar feedback' : 'Reativar feedback'}
             bgColor={is_active ? 'gray.700' : 'blue.400'}
             leftIcon={<Power size={sizes[4]} color={colors.gray[200]} />}
             onPress={handleDisableAd}
@@ -197,9 +197,9 @@ export function AdDetails() {
             disabled={isDeleting}
           />
           <Button
-            title='Excluir anúncio'
+            title='Excluir feedback'
             bgColor='gray.300'
-            leftIcon={<TrashSimple size={sizes[4]} color={colors.gray[500]} />}
+            leftIcon={<TrashSimple size={sizes[4]} color={colors.red[500]} />}
             isLoading={isDeleting}
             disabled={isUpdating}
             onPress={handleDeleteAd}

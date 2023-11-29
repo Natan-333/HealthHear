@@ -21,14 +21,13 @@ export type HomeTabsNavigatorRoutesProps =
 const { Navigator, Screen } = createBottomTabNavigator<HomeTabsRoutes>();
 
 export function HomeTabsRoutes() {
+  // Hook
   const { sizes, colors } = useTheme();
   const { signOut } = useAuth();
 
   const iconSize = sizes[6];
 
-  const LogOutFakeScreen = () => {
-    return null;
-  };
+  const LogOutFakeScreen = () => null;
 
   return (
     <Navigator
@@ -40,9 +39,8 @@ export function HomeTabsRoutes() {
         tabBarStyle: {
           backgroundColor: colors.gray[200],
           borderTopWidth: 0,
-          height: Platform.OS === 'android' ? 'auto' : 96,
-          paddingBottom: sizes[10],
           paddingTop: sizes[6],
+          paddingBottom: sizes[6],
         },
       }}
     >

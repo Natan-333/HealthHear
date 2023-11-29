@@ -9,6 +9,7 @@ import {
   Center,
   FlatList,
   HStack,
+  IToastProps,
   Pressable,
   ScrollView,
   Skeleton,
@@ -31,9 +32,17 @@ import { HomeTabsNavigatorRoutesProps } from '@routes/home.tabs.routes';
 import { IProduct } from 'src/interfaces/IProduct';
 import { api } from '@services/api';
 
+// Component import
+import {
+  FeedbackImage,
+  FeedbackImageLoading,
+  FeedbackImageUpload
+} from '@components/index';
+
 const PHOTO_SIZE = 100;
 
-export function CreateAd() {
+export function CreateFeedback() {
+  // Hook
   const { colors, sizes } = useTheme();
   const { user } = useAuth();
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
@@ -44,6 +53,7 @@ export function CreateAd() {
 
   const params = route.params as IProduct;
 
+  // State
   const [images, setImages] = useState<IPhoto[]>([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -54,14 +64,11 @@ export function CreateAd() {
   const [paymentMethods, setPaymentMethods] = useState<IPaymentMethods[]>([]);
   const [isActive, setIsActive] = useState(true);
   const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
-  const [headerTitle, setHeaderTitle] = useState('Criar anúncio');
-
-  function handleGoBackToMyAdsScreen() {
-    navigateTabs('myAds');
-  }
+  const [headerTitle, setHeaderTitle] = useState('Criar feedback');
 
   async function handlePhotoSelect() {
     setPhotoIsLoading(true);
+
     try {
       const photoSelected = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -81,7 +88,7 @@ export function CreateAd() {
           type: `${photoSelected.assets[0].type}/${fileExtension}`,
         } as any;
 
-        setImages((prev) => [photoFile, ...prev]);
+        return setImages((prev) => [photoFile, ...prev]);
       }
     } catch (error) {
       const isAppError = error instanceof AppError;
@@ -99,16 +106,15 @@ export function CreateAd() {
   }
 
   function handleRemovePhoto(photo: IPhoto) {
-    setImages((prev) =>
-      prev.filter((item) => {
-        if (
-          item.name === photo.name &&
-          photo.uri.match(`${api.defaults.baseURL}/images/`)
-        ) {
-          setImagesToDelete((prev) => [...prev, photo.name]);
-        }
-        return item.name !== photo.name;
-      })
+    setImages(prev => prev.filter((item) => {
+      if (
+        item.name === photo.name &&
+        photo.uri.match(`${api.defaults.baseURL}/images/`)
+      ) {
+        setImagesToDelete((prev) => [...prev, photo.name]);
+      }
+      return item.name !== photo.name;
+    })
     );
   }
 
@@ -119,57 +125,30 @@ export function CreateAd() {
   function handlePaymentMethods(payment_method: IPaymentMethods) {
     const existMethod = findPaymentMethod(payment_method);
 
-    if (existMethod) {
-      setPaymentMethods((prev) =>
-        prev.filter((item) => item !== payment_method)
+    if (existMethod)
+      return setPaymentMethods(prev => prev.filter((item) =>
+        item !== payment_method)
       );
-    } else {
-      setPaymentMethods((prev) => [...prev, payment_method]);
-    }
+
+    return setPaymentMethods((prev) => [...prev, payment_method]);
   }
 
   function handleNavigateToAdPreview() {
-    if (images.length <= 0) {
-      return toast.show({
-        title: 'Adicione ao menos uma foto do seu produto.',
-        placement: 'top',
-        bgColor: 'red.500',
-      });
+    const defaultToastProps: IToastProps = {
+      placement: "top",
+      bgColor: 'red.500'
     }
 
-    if (name === '') {
-      return toast.show({
-        title: 'Informe o título do seu anúncio.',
-        placement: 'top',
-        bgColor: 'red.500',
-      });
-    }
+    if (images.length <= 0)
+      return toast.show({ ...defaultToastProps, title: 'Adicione uma foto.' });
 
-    if (description === '') {
-      return toast.show({
-        title: 'Informe a descrição do seu anúncio.',
-        placement: 'top',
-        bgColor: 'red.500',
-      });
-    }
+    if (name.trim() === '')
+      return toast.show({ ...defaultToastProps, title: 'Informe o título.' });
 
-    if (isNew === '') {
-      return toast.show({
-        title: 'Informe o estado do seu produto.',
-        placement: 'top',
-        bgColor: 'red.500',
-      });
-    }
+    if (description.trim() === '')
+      return toast.show({ ...defaultToastProps, title: 'Informe a descrição' });
 
     const rawPrice = Number(maskedPriceToNumber(price)) * 100;
-
-    if (price === '' || rawPrice <= 0) {
-      return toast.show({
-        title: 'Informe o valor do seu produto.',
-        placement: 'top',
-        bgColor: 'red.500',
-      });
-    }
 
     if (paymentMethods.length <= 0) {
       return toast.show({
@@ -216,7 +195,7 @@ export function CreateAd() {
           position='absolute'
           left={0}
           ml='6'
-          onPress={handleGoBackToMyAdsScreen}
+          onPress={() => navigateTabs('myAds')}
         >
           <ArrowLeft size={sizes[6]} color={colors.gray[700]} />
         </Pressable>
@@ -232,84 +211,43 @@ export function CreateAd() {
         </Text>
 
         <Text color='gray.500' fontFamily='regular' fontSize='sm'>
-          Escolha até 3 imagens para mostrar o quando o seu produto é incrível!
+          Selecione uma imagem para expressar sua crítica, denúncia ou elogio.
         </Text>
 
         <FlatList
           data={images}
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => (
-            <VStack>
-              <ProductSmallPhoto
-                source={{ uri: item.uri }}
-                alt='Foto do produto'
-                size={PHOTO_SIZE}
-              />
-              <Pressable
-                w='4'
-                h='4'
-                rounded='full'
-                bg='gray.600'
-                alignItems='center'
-                justifyContent='center'
-                position='absolute'
-                top={1}
-                right={1}
-                onPress={() => handleRemovePhoto(item)}
-              >
-                <X size={12} color={'white'} />
-              </Pressable>
-            </VStack>
+            <FeedbackImage image={item} handleRemovePhoto={handleRemovePhoto} />
           )}
-          ListHeaderComponent={
-            photoIsLoading ? (
-              <Skeleton
-                w={PHOTO_SIZE}
-                h={PHOTO_SIZE}
-                rounded={6}
-                startColor='gray.500'
-                endColor='gray.400'
-              />
-            ) : null
-          }
+          ListHeaderComponent={photoIsLoading ? <FeedbackImageLoading /> : null}
           ListFooterComponent={
-            images.length < 3 ? (
-              <Pressable
-                w={100}
-                h={100}
-                rounded={6}
-                bg='gray.300'
-                alignItems='center'
-                justifyContent='center'
-                onPress={handlePhotoSelect}
-              >
-                <Plus size={sizes[6]} color={colors.gray[400]} />
-              </Pressable>
-            ) : null
+            images.length < 1 && !photoIsLoading ?
+              <FeedbackImageUpload onPress={handlePhotoSelect} /> :
+              null
           }
-          contentContainerStyle={{
-            paddingVertical: sizes[6],
-            gap: 8,
-          }}
+          contentContainerStyle={{ paddingVertical: sizes[6], gap: 8 }}
           horizontal
         />
 
         <Text color='gray.600' fontFamily='bold' fontSize='md' mb='3'>
-          Sobre o produto
+          Comece sua avaliação
         </Text>
 
         <Input
-          placeholder='Título do anúncio'
+          placeholder='Título'
           value={name}
           onChangeText={setName}
         />
 
         <Input
-          placeholder='Descrição do produto'
+          placeholder='Mais detalhes...'
           value={description}
           onChangeText={setDescription}
-          h='40'
+          minH='20'
+          h='auto'
           multiline
+          textAlignVertical="top"
         />
 
         <Radio
@@ -351,10 +289,11 @@ export function CreateAd() {
         />
 
         <Text color='gray.600' fontFamily='bold' fontSize='md' mt={6} mb={3}>
-          Aceita troca?
+          Deseja manter o comentário anônimo?
         </Text>
+
         <Switch
-          size='sm'
+          size='md'
           alignSelf='flex-start'
           offTrackColor='gray.300'
           onTrackColor='blue.400'
@@ -407,14 +346,15 @@ export function CreateAd() {
         />
       </ScrollView>
 
-      <HStack w='full' safeAreaBottom bg='white' pt='6' px='6'>
+      <HStack w='full' safeAreaBottom bg='white' p='3' px='6'>
         <Button
           title='Cancelar'
           flex={1}
           bgColor='gray.300'
           marginRight={2}
-          onPress={handleGoBackToMyAdsScreen}
+          onPress={() => navigateTabs('myAds')}
         />
+
         <Button
           title='Avançar'
           flex={1}

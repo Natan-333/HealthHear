@@ -13,7 +13,7 @@ import { IProduct } from 'src/interfaces/IProduct';
 import { toMaskedPrice } from '@utils/Masks';
 import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 
-const PHOTO_SIZE = 6;
+const PHOTO_SIZE = 10;
 
 export function AdDetails({
   user,
@@ -82,16 +82,16 @@ export function AdDetails({
   }
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false} >
       <ImageSlider imagesUrl={product_images} disabled={!is_active} />
 
-      <VStack px='6'>
-        <HStack my='6'>
+      <VStack px='6' paddingBottom="10">
+        <HStack my='6' display="flex" alignItems="center">
           <UserPhoto
             source={{ uri: `${api.defaults.baseURL}/images/${user.avatar}` }}
             alt='Foto do vendedor'
             size={PHOTO_SIZE}
-            borderWidth={2}
+            borderWidth={1}
           />
           <Text fontFamily='regular' fontSize='sm' color='gray.700' ml='2'>
             {user.name}

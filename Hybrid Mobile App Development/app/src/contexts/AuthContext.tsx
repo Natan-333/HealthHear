@@ -35,9 +35,7 @@ const AuthContext = createContext<AuthContextDataProps>(
 
 function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
-  const [userProducts, setUserProducts] = useState<IProduct[]>(
-    [] as IProduct[]
-  );
+  const [userProducts, setUserProducts] = useState<IProduct[]>([]);
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] =
     useState(true);
 

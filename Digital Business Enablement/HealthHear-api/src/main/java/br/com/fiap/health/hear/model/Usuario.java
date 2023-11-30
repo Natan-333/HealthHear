@@ -6,13 +6,9 @@ import jakarta.validation.constraints.*;
 
 import lombok.*;
 
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Entity
 @Table(name = "USUARIO", uniqueConstraints = {
         @UniqueConstraint(name = "UK_EMAIL_USUARIO", columnNames = "EMAIL_USUARIO"),
@@ -26,21 +22,21 @@ public class Usuario {
     private Long id;
 
     @Column(name = "NOME_USUARIO", nullable = false)
-    @NotBlank(message = "O nome não pode estar vazio.")
+    @NotBlank(message = "O campo nome não pode estar vazio.")
     private String nome;
 
     @Column(name = "EMAIL_USUARIO", nullable = false)
-    @NotBlank(message = "O endereço de e-mail não pode estar vazio.")
+    @NotBlank(message = "O campo email não pode estar vazio.")
     @Email(message = "Endereço de e-mail inválido.")
     private String email;
 
     @Column(name = "SENHA_USUARIO", nullable = false)
-    @NotBlank(message = "A senha não pode estar vazia.")
+    @NotBlank(message = "O campo senha não pode estar vazio.")
     @JsonIgnore
     private String senha;
 
     @Column(name = "CPF_USUARIO", nullable = false)
-    @NotBlank(message = "O CPF não pode estar vazio.")
+    @NotBlank(message = "O campo cpf não pode estar vazio.")
     @Size(min = 11, max = 11, message = "O CPF deve ter 11 caracteres.")
     private String cpf;
 

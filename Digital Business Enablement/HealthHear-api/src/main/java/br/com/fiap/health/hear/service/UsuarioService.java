@@ -54,16 +54,16 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "(" + getClass().getSimpleName() + ") - Usuario não encontrada por ID: " + id));
     }
 
-    private UsuarioDTO convertToDto(Usuario entity) {
-        UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(entity.getId());
-        dto.setNome(entity.getNome());
-        dto.setEmail(entity.getEmail());
-        dto.setSenha(entity.getSenha());
-        dto.setCpf(entity.getCpf());
-        dto.setImagem(entity.getImagem());
-        return dto;
-    }
+    // private UsuarioDTO convertToDto(Usuario entity) {
+    //     UsuarioDTO dto = new UsuarioDTO();
+    //     dto.setId(entity.getId());
+    //     dto.setNome(entity.getNome());
+    //     dto.setEmail(entity.getEmail());
+    //     dto.setSenha(entity.getSenha());
+    //     dto.setCpf(entity.getCpf());
+    //     dto.setImagem(entity.getImagem());
+    //     return dto;
+    // }
 
     private Usuario convertToEntity(UsuarioDTO dto) {
         if (Objects.isNull(dto)) {

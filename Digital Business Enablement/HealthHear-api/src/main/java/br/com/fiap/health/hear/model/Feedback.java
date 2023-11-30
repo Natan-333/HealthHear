@@ -8,13 +8,9 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Entity
 @Table(name = "FEEDBACK")
 public class Feedback {
@@ -24,29 +20,37 @@ public class Feedback {
     @Column(name = "ID_FEEDBACK")
     private Long id;
 
-    @Column(name = "DATA_FEEDBACK")
+    @Column(name = "DATA_FEEDBACK", nullable = false)
+    @NotNull(message = "O campo data não pode estar vazio.")
+    @PastOrPresent
     @Temporal(TemporalType.DATE)
     private Date data;
 
     @Column(name = "TITULO_FEEDBACK", nullable = false, length = 255)
+    @NotBlank(message = "O titulo data não pode estar vazio.")
     private String titulo;
 
     @Column(name = "DESCRICAO_FEEDBACK", nullable = false, length = 500)
+    @NotBlank(message = "O campo descricao não pode estar vazio.")
     private String descricao;
 
     @Column(name = "NOTA_FEEDBACK", nullable = false)
+    @NotNull(message = "O campo nota não pode estar vazio.")
     @Min(1)@Max(5)
     private BigDecimal nota;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "ID_PACIENTE", referencedColumnName = "ID_USUARIO", foreignKey = @ForeignKey(name = "FK_FEEDBACK_PACIENTE"))
+    @NotNull(message = "O campo paciente não pode estar vazio.")
+    @JoinColumn(name = "ID_PACIENTE", referencedColumnName = "ID_USUARIO", foreignKey = @ForeignKey(name = "FK_FEEDBACK_PACIENTE"), nullable = false)
     private Usuario paciente;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "ID_REGISTRO", referencedColumnName = "ID_REGISTRO", foreignKey = @ForeignKey(name = "FK_FEEDBACK_REGISTRO"))
+    @NotNull(message = "O campo registro não pode estar vazio.")
+    @JoinColumn(name = "ID_REGISTRO", referencedColumnName = "ID_REGISTRO", foreignKey = @ForeignKey(name = "FK_FEEDBACK_REGISTRO"), nullable = false)
     private Registro registro;
 
     @Column(name = "IS_ANONIMO", nullable = false)
+    @NotNull(message = "O campo isAnonimo não pode estar vazio.")
     private Boolean isAnonimo;
 
     @Column(name = "ACAO_TOMADA_FEEDBACK")
@@ -56,6 +60,6 @@ public class Feedback {
     private String imagem;
 
     @Column(name = "TIPO_FEEDBACK", nullable = false)
-    @NotBlank(message = "O tipo do feedback não pode estar vazio.")
+    @NotBlank(message = "O campo tipo não pode estar vazio.")
     private String tipo;
 }

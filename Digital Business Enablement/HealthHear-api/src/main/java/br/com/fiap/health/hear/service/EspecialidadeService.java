@@ -15,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors;
 
 @Service
 public class EspecialidadeService {
@@ -64,18 +64,18 @@ public class EspecialidadeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "(" + getClass().getSimpleName() + ") - Especialidade não encontrada por ID: " + id));
     }
 
-    private EspecialidadeDTO convertToDto(Especialidade entity) {
-        EspecialidadeDTO dto = new EspecialidadeDTO();
-        dto.setId(entity.getId());
-        dto.setNome(entity.getNome());
-        if (entity.getRegistros() != null) {
-            Set<Long> idsRegistros = entity.getRegistros().stream()
-                    .map(Registro::getId)
-                    .collect(Collectors.toSet());
-            dto.setIdRegistros(idsRegistros);
-        }
-        return dto;
-    }
+    // private EspecialidadeDTO convertToDto(Especialidade entity) {
+    //     EspecialidadeDTO dto = new EspecialidadeDTO();
+    //     dto.setId(entity.getId());
+    //     dto.setNome(entity.getNome());
+    //     if (entity.getRegistros() != null) {
+    //         Set<Long> idsRegistros = entity.getRegistros().stream()
+    //                 .map(Registro::getId)
+    //                 .collect(Collectors.toSet());
+    //         dto.setIdRegistros(idsRegistros);
+    //     }
+    //     return dto;
+    // }
 
     private Especialidade convertToEntity(EspecialidadeDTO dto) {
         if (dto == null) {

@@ -58,15 +58,15 @@ public class RespostaService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "(" + getClass().getSimpleName() + ") - Resposta não encontrada por ID: " + id));
     }
 
-    private RespostaDTO convertToDto(Resposta entity) {
-        RespostaDTO dto = new RespostaDTO();
-        dto.setId(entity.getId());
-        dto.setData(entity.getData());
-        dto.setDescricao(entity.getDescricao());
-        dto.setIdUsuario(entity.getUsuario() != null ? entity.getUsuario().getId() : null);
-        dto.setIdFeedback(entity.getFeedback() != null ? entity.getFeedback().getId() : null);
-        return dto;
-    }
+    // private RespostaDTO convertToDto(Resposta entity) {
+    //     RespostaDTO dto = new RespostaDTO();
+    //     dto.setId(entity.getId());
+    //     dto.setData(entity.getData());
+    //     dto.setDescricao(entity.getDescricao());
+    //     dto.setIdUsuario(entity.getUsuario() != null ? entity.getUsuario().getId() : null);
+    //     dto.setIdFeedback(entity.getFeedback() != null ? entity.getFeedback().getId() : null);
+    //     return dto;
+    // }
 
     private Resposta convertToEntity(RespostaDTO dto) {
         if (Objects.isNull(dto)) {

@@ -1,21 +1,19 @@
 package br.com.fiap.health.hear.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import lombok.*;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Entity
 @Table(name = "REGISTRO")
 public class Registro {
@@ -23,27 +21,22 @@ public class Registro {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_REGISTRO")
     @SequenceGenerator(name = "SQ_REGISTRO", sequenceName = "SQ_REGISTRO", allocationSize = 1)
     @Column(name = "ID_REGISTRO")
-    @Getter @Setter
     private Long id;
 
     @Column(name = "NUMERO_REGISTRO", nullable = false)
-    @NotBlank(message = "O número do registro não pode estar vazio.")
-    @Getter @Setter
+    @NotBlank(message = "O campo numero não pode estar vazio.")
     private String numero;
 
     @Column(name = "TIPO_REGISTRO", nullable = false)
-    @NotBlank(message = "O tipo do registro não pode estar vazio.")
-    @Getter @Setter
+    @NotBlank(message = "O campo tipoRegistro não pode estar vazio.")
     private String tipoRegistro;
 
     @Column(name = "UF_REGISTRO", nullable = false)
-    @NotBlank(message = "O uf do registro não pode estar vazio.")
-    @Getter @Setter
+    @NotBlank(message = "O campo uf não pode estar vazio.")
     private String uf;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO", foreignKey = @ForeignKey(name = "FK_REGISTRO_USUARIO"))
-    @Getter @Setter
     private Usuario usuario;
 
     @JsonManagedReference
@@ -80,9 +73,5 @@ public class Registro {
         this.especialidades.remove(especialidade);
         if (especialidade.getRegistros().contains(this)) especialidade.removeRegistro(this);
         return this;
-    }
-
-    public Set<Especialidade> getEspecialidades() {
-        return Collections.unmodifiableSet(especialidades);
     }
 }

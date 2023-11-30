@@ -58,21 +58,21 @@ public class FeedbackService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "(" + getClass().getSimpleName() + ") - Feedback não encontrada por ID: " + id));
     }
 
-    private FeedbackDTO convertToDto(Feedback entity) {
-        FeedbackDTO dto = new FeedbackDTO();
-        dto.setId(entity.getId());
-        dto.setData(entity.getData());
-        dto.setTitulo(entity.getTitulo());
-        dto.setDescricao(entity.getDescricao());
-        dto.setNota(entity.getNota());
-        dto.setIdPaciente(entity.getPaciente() != null ? entity.getPaciente().getId() : null);
-        dto.setIdRegistro(entity.getRegistro() != null ? entity.getRegistro().getId() : null);
-        dto.setIsAnonimo(entity.getIsAnonimo());
-        dto.setAcao(entity.getAcao());
-        dto.setImagem(entity.getImagem());
-        dto.setTipo(entity.getTipo());
-        return dto;
-    }
+    // private FeedbackDTO convertToDto(Feedback entity) {
+    //     FeedbackDTO dto = new FeedbackDTO();
+    //     dto.setId(entity.getId());
+    //     dto.setData(entity.getData());
+    //     dto.setTitulo(entity.getTitulo());
+    //     dto.setDescricao(entity.getDescricao());
+    //     dto.setNota(entity.getNota());
+    //     dto.setIdPaciente(entity.getPaciente() != null ? entity.getPaciente().getId() : null);
+    //     dto.setIdRegistro(entity.getRegistro() != null ? entity.getRegistro().getId() : null);
+    //     dto.setIsAnonimo(entity.getIsAnonimo());
+    //     dto.setAcao(entity.getAcao());
+    //     dto.setImagem(entity.getImagem());
+    //     dto.setTipo(entity.getTipo());
+    //     return dto;
+    // }
 
     private Feedback convertToEntity(FeedbackDTO dto) {
         if (Objects.isNull(dto)) {

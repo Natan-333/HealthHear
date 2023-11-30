@@ -1,18 +1,15 @@
 package br.com.fiap.health.hear.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Entity
 @Table(name = "RESPOSTA")
 public class Resposta {
@@ -23,16 +20,21 @@ public class Resposta {
     private Long id;
 
     @Column(name = "DATA_RESPOSTA", nullable = false)
+    @NotNull(message = "O campo data não pode estar vazio.")
+    @PastOrPresent
     private Date data;
 
     @Column(name = "DESCRICAO_RESPOSTA", nullable = false, length = 500)
+    @NotBlank(message = "O campo descricao não pode estar vazio.")
     private String descricao;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @NotNull(message = "O campo usuario não pode estar vazio.")
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO", foreignKey = @ForeignKey(name = "FK_RESPOSTA_USUARIO"))
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @NotNull(message = "O campo feedback não pode estar vazio.")
     @JoinColumn(name = "ID_FEEDBACK", referencedColumnName = "ID_FEEDBACK", foreignKey = @ForeignKey(name = "FK_RESPOSTA_FEEDBACK"))
     private Feedback feedback;
 }

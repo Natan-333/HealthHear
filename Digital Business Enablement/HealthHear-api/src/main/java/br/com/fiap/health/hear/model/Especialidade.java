@@ -1,12 +1,12 @@
 package br.com.fiap.health.hear.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import lombok.*;
 
-import java.util.Collections;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -14,8 +14,6 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 @Entity
 @Table(name = "ESPECIALIDADE", uniqueConstraints = {
         @UniqueConstraint(name = "UK_NOME_ESPECIALIDADE", columnNames = "NOME_ESPECIALIDADE")
@@ -25,12 +23,10 @@ public class Especialidade {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ESPECIALIDADE")
     @SequenceGenerator(name = "SQ_ESPECIALIDADE", sequenceName = "SQ_ESPECIALIDADE", allocationSize = 1)
     @Column(name = "ID_ESPECIALIDADE")
-    @Getter @Setter
     private Long id;
 
     @Column(name = "NOME_ESPECIALIDADE", nullable = false)
-    @NotBlank(message = "O nome da especialidade não pode estar vazio.")
-    @Getter @Setter
+    @NotBlank(message = "O campo nome não pode estar vazio.")
     private String nome;
 
     @JsonBackReference
@@ -67,9 +63,5 @@ public class Especialidade {
         this.registros.remove(registro);
         if (registro.getEspecialidades().contains(this)) registro.removeEspecialidade(this);
         return this;
-    }
-
-    public Set<Registro> getRegistros() {
-        return Collections.unmodifiableSet(registros);
     }
 }

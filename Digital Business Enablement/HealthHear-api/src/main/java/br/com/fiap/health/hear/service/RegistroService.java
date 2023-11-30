@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors;
 
 @Service
 public class RegistroService {
@@ -68,21 +68,21 @@ public class RegistroService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "(Registro) - Registro não encontrado por ID: " + id));
     }
 
-    private RegistroDTO convertToDto(Registro entity) {
-        RegistroDTO dto = new RegistroDTO();
-        dto.setId(entity.getId());
-        dto.setNumero(entity.getNumero());
-        dto.setUf(entity.getUf());
-        dto.setTipoRegistro(entity.getTipoRegistro());
-        dto.setIdUsuario(entity.getUsuario() != null ? entity.getUsuario().getId() : null);
-        if (entity.getEspecialidades() != null) {
-            Set<Long> idsEspecialidades = entity.getEspecialidades().stream()
-                    .map(Especialidade::getId)
-                    .collect(Collectors.toSet());
-            dto.setIdEspecialidades(idsEspecialidades);
-        }
-        return dto;
-    }
+    // private RegistroDTO convertToDto(Registro entity) {
+    //     RegistroDTO dto = new RegistroDTO();
+    //     dto.setId(entity.getId());
+    //     dto.setNumero(entity.getNumero());
+    //     dto.setUf(entity.getUf());
+    //     dto.setTipoRegistro(entity.getTipoRegistro());
+    //     dto.setIdUsuario(entity.getUsuario() != null ? entity.getUsuario().getId() : null);
+    //     if (entity.getEspecialidades() != null) {
+    //         Set<Long> idsEspecialidades = entity.getEspecialidades().stream()
+    //                 .map(Especialidade::getId)
+    //                 .collect(Collectors.toSet());
+    //         dto.setIdEspecialidades(idsEspecialidades);
+    //     }
+    //     return dto;
+    // }
 
     private Registro convertToEntity(RegistroDTO dto) {
         if (dto == null) {

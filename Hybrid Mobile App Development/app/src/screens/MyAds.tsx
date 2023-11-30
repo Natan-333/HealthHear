@@ -1,4 +1,4 @@
-import { Ads } from '@components/Ads';
+import { Ads } from '@components/Professionals';
 import { useAuth } from '@hooks/useAuth';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';

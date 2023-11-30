@@ -20,9 +20,10 @@ import {
   MagnifyingGlass,
   Faders,
   X,
+  Chats,
 } from 'phosphor-react-native';
 import { Input } from '@components/Input';
-import { Ads } from '@components/Ads';
+import { Professionals } from '@components/Professionals';
 import { Modalize } from 'react-native-modalize';
 import { Dimensions } from 'react-native';
 import { Portal } from 'react-native-portalize';
@@ -41,7 +42,7 @@ import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 import { Loading } from '@components/Loading';
 
 const PHOTO_SIZE = 12;
-const { height } = Dimensions.get('screen');
+const { height, width } = Dimensions.get('screen');
 
 export function Home() {
   const { colors, sizes } = useTheme();
@@ -60,8 +61,50 @@ export function Home() {
   const [isNew, setIsNew] = useState<boolean | null>(null);
   const [search, setSearch] = useState('');
   const [isFetchLoading, setIsFetchLoading] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
+
+  const professionalsExample = [
+		{
+      "id": 1,
+      "numero": "123456",
+      "tipoRegistro": "CRM",
+      "uf": "SP",
+      "usuario": {
+        "id": 3,
+        "nome": "Stanley Bittar",
+        "email": "stanley@hotmail.com",
+        "cpf": "43101167873",
+        "imagem": "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394"
+      },
+      "especialidades": [
+        {
+          "id": 1,
+          "nome": "Neurologia"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "numero": "123456",
+      "tipoRegistro": "CRM",
+      "uf": "SP",
+      "usuario": {
+        "id": 3,
+        "nome": "Stanley Bittar",
+        "email": "stanley@hotmail.com",
+        "cpf": "43101167873",
+        "imagem": "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394"
+      },
+      "especialidades": [
+        {
+          "id": 1,
+          "nome": "Neurologia"
+        }
+      ]
+    },
+
+	]
 
   function handleOpenModalize() {
     modalizeRef.current?.open();
@@ -79,7 +122,7 @@ export function Home() {
     navigateTabs('myAds');
   }
 
-  function countActiveAds() {
+  function countActiveFeedbacks() {
     let activeAds = userProducts.map((item) => item.is_active === true);
     return activeAds.length;
   }
@@ -115,39 +158,39 @@ export function Home() {
   }
 
   async function fetchFilteredProducts() {
-    try {
-      handleCloseModalize();
+    // try {
+    //   handleCloseModalize();
 
-      setIsLoading(true);
-      let filter = `?query=${search}`;
+    //   setIsLoading(true);
+    //   let filter = `?query=${search}`;
 
-      if (isNew !== null) {
-        filter += `&is_new=${isNew}`;
-      }
-      if (acceptTrade !== null) {
-        filter += `&accept_trade=${acceptTrade}`;
-      }
-      if (paymentMethods.length > 0) {
-        filter += `&payment_methods=${JSON.stringify(paymentMethods)}`;
-      }
-      console.log('filtro:', filter);
+    //   if (isNew !== null) {
+    //     filter += `&is_new=${isNew}`;
+    //   }
+    //   if (acceptTrade !== null) {
+    //     filter += `&accept_trade=${acceptTrade}`;
+    //   }
+    //   if (paymentMethods.length > 0) {
+    //     filter += `&payment_methods=${JSON.stringify(paymentMethods)}`;
+    //   }
+    //   console.log('filtro:', filter);
 
-      const { data } = await api.get(`/products${filter}`);
-      setData(data.map((item: ProductDTO) => ProductMap.toIProduct(item)));
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError
-        ? error.message
-        : 'Não foi possível carregar o anúncio. Tente novamente mais tarde.';
+    //   const { data } = await api.get(`/products${filter}`);
+    //   setData(data.map((item: ProductDTO) => ProductMap.toIProduct(item)));
+    // } catch (error) {
+    //   const isAppError = error instanceof AppError;
+    //   const title = isAppError
+    //     ? error.message
+    //     : 'Não foi possível carregar o anúncio. Tente novamente mais tarde.';
 
-      toast.show({
-        title,
-        placement: 'top',
-        bgColor: 'red.500',
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    //   toast.show({
+    //     title,
+    //     placement: 'top',
+    //     bgColor: 'red.500',
+    //   });
+    // } finally {
+    //   setIsLoading(false);
+    // }
   }
 
   async function fetchUserData() {
@@ -222,7 +265,7 @@ export function Home() {
       </HStack>
 
       <Text color='gray.500' fontSize='sm' fontFamily='regular' mt='6' mb='2'>
-        Seus feedbacks cadastrado
+        Seus feedbacks anteriores
       </Text>
 
       {isFetchLoading && userProducts.length <= 0 ? (
@@ -242,14 +285,14 @@ export function Home() {
           flexDirection='row'
           onPress={handleNavigateToMyAds}
         >
-          <Tag size={22} color={colors.blue[700]} />
+          <Chats size={22} color={colors.blue[700]} />
 
           <VStack flex={1} justifyContent='center' px='2'>
             <Text color='gray.600' fontSize='lg+' fontFamily='bold'>
-              {countActiveAds()}
+              {countActiveFeedbacks()}
             </Text>
             <Text color='gray.600' fontSize='xs' fontFamily='regular'>
-              Feedbacks ativos
+              Feedbacks relevantes
             </Text>
           </VStack>
 
@@ -303,13 +346,14 @@ export function Home() {
         <Loading />
       ) : (
         <FlatList
-          data={data}
+          data={professionalsExample}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <Ads {...item} />}
+          renderItem={({ item }) => <Professionals {...item} />}
           horizontal={false}
           numColumns={2}
           columnWrapperStyle={{
             justifyContent: 'space-between',
+            gap: 15
           }}
           contentContainerStyle={
             data.length <= 0 && {
@@ -327,7 +371,7 @@ export function Home() {
               mt='6'
               mb='2'
             >
-              Nenhum anúncio encontrado!
+              Nenhum profissional encontrado!
             </Text>
           }
         />
@@ -421,6 +465,7 @@ export function Home() {
                 handlePaymentMethods('card');
               }}
             />
+
             <Checkbox
               isChecked={findPaymentMethod('deposit')}
               value='deposit'

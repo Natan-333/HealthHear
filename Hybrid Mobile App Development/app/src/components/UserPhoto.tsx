@@ -10,8 +10,6 @@ export function UserPhoto({ size, ...rest }: Props) {
       w={size}
       h={size}
       rounded='full'
-      borderWidth={2}
-      borderColor='blue.400'
       {...rest}
     />
   );

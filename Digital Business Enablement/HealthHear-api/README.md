@@ -21,7 +21,6 @@ Representa um registro profissional associado a um usuário.
 - `uf_registro` (CHAR(2)): Sigla da unidade federativa do registro (Não Nulo).
 - `tipo_registro` (VARCHAR(255)): Tipo de registro (Não Nulo).
 - `id_usuario` (NUMBER(9)): Chave estrangeira referenciando Usuario(id_usuario).
-- Único: Combinação única de (numero_registro, uf_registro, tipo_registro).
 
 ### Classe: `Feedback`
 

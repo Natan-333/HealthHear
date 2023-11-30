@@ -25,27 +25,27 @@ public class RespostaService {
     @Autowired
     private FeedbackService feedbackService;
 
-    public Page<RespostaDTO> listAll(Pageable pageRequest) {
-        return respostaRepository.findAll(pageRequest).map(this::convertToDto);
+    public Page<Resposta> listAll(Pageable pageRequest) {
+        return respostaRepository.findAll(pageRequest);
     }
 
-    public RespostaDTO findById(Long id) {
+    public Resposta findById(Long id) {
         Resposta entity = findEntityById(id);
-        return convertToDto(entity);
+        return entity;
     }
 
-    public RespostaDTO create(RespostaDTO newData) {
+    public Resposta create(RespostaDTO newData) {
         Resposta entity = convertToEntity(newData);
         Resposta savedEntity = respostaRepository.save(entity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
-    public RespostaDTO update(Long id, RespostaDTO updatedData) {
+    public Resposta update(Long id, RespostaDTO updatedData) {
         findEntityById(id);
         updatedData.setId(id);
         Resposta updatedEntity = convertToEntity(updatedData);    
         Resposta savedEntity = respostaRepository.save(updatedEntity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
     public void delete(Long id) {

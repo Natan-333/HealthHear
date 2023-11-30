@@ -1,5 +1,6 @@
 package br.com.fiap.health.hear.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -35,6 +36,7 @@ public class Usuario {
 
     @Column(name = "SENHA_USUARIO", nullable = false)
     @NotBlank(message = "A senha não pode estar vazia.")
+    @JsonIgnore
     private String senha;
 
     @Column(name = "CPF_USUARIO", nullable = false)

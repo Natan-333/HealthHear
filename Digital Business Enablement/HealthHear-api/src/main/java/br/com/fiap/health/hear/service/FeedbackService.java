@@ -25,27 +25,27 @@ public class FeedbackService {
     @Autowired
     private RegistroService registroService;
 
-    public Page<FeedbackDTO> listAll(Pageable pageRequest) {
-        return feedbackRepository.findAll(pageRequest).map(this::convertToDto);
+    public Page<Feedback> listAll(Pageable pageRequest) {
+        return feedbackRepository.findAll(pageRequest);
     }
 
-    public FeedbackDTO findById(Long id) {
+    public Feedback findById(Long id) {
         Feedback entity = findEntityById(id);
-        return convertToDto(entity);
+        return entity;
     }
 
-    public FeedbackDTO create(FeedbackDTO newData) {
+    public Feedback create(FeedbackDTO newData) {
         Feedback entity = convertToEntity(newData);
         Feedback savedEntity = feedbackRepository.save(entity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
-    public FeedbackDTO update(Long id, FeedbackDTO updatedData) {
+    public Feedback update(Long id, FeedbackDTO updatedData) {
         findEntityById(id);
         updatedData.setId(id);
         Feedback updatedEntity = convertToEntity(updatedData);    
         Feedback savedEntity = feedbackRepository.save(updatedEntity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
     public void delete(Long id) {

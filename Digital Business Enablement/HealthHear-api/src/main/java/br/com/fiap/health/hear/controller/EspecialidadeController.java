@@ -1,6 +1,7 @@
 package br.com.fiap.health.hear.controller;
 
 import br.com.fiap.health.hear.dto.EspecialidadeDTO;
+import br.com.fiap.health.hear.model.Especialidade;
 import br.com.fiap.health.hear.service.EspecialidadeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class EspecialidadeController {
     private EspecialidadeService especialidadeService;
 
     @GetMapping
-    public ResponseEntity<Page<EspecialidadeDTO>> listAll(
+    public ResponseEntity<Page<Especialidade>> listAll(
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageRequest
     ) {
         log.info("(" + getClass().getSimpleName() + ") - Buscando todos(as)");
@@ -33,19 +34,19 @@ public class EspecialidadeController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<EspecialidadeDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<Especialidade> findById(@PathVariable Long id) {
         log.info("(" + getClass().getSimpleName() + ") - Exibindo por ID: " + id);
         return ResponseEntity.ok(especialidadeService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<EspecialidadeDTO> create(@RequestBody @Valid EspecialidadeDTO newData) {
+    public ResponseEntity<Especialidade> create(@RequestBody @Valid EspecialidadeDTO newData) {
         log.info("(" + getClass().getSimpleName() + ") - Cadastrando: " + newData);
         return ResponseEntity.status(HttpStatus.CREATED).body(especialidadeService.create(newData));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<EspecialidadeDTO> update(@PathVariable Long id, @RequestBody @Valid EspecialidadeDTO updatedData) {
+    public ResponseEntity<Especialidade> update(@PathVariable Long id, @RequestBody @Valid EspecialidadeDTO updatedData) {
         log.info("(" + getClass().getSimpleName() + ") - Atualizando por ID: " + id);
         return ResponseEntity.ok(especialidadeService.update(id, updatedData));
     }

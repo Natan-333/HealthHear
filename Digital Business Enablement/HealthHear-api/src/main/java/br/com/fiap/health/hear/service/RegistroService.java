@@ -30,27 +30,27 @@ public class RegistroService {
     @Autowired
     private UsuarioService usuarioService;
 
-    public Page<RegistroDTO> listAll(Pageable pageRequest) {
-        return registroRepository.findAll(pageRequest).map(this::convertToDto);
+    public Page<Registro> listAll(Pageable pageRequest) {
+        return registroRepository.findAll(pageRequest);
     }
 
-    public RegistroDTO findById(Long id) {
+    public Registro findById(Long id) {
         Registro entity = findEntityById(id);
-        return convertToDto(entity);
+        return entity;
     }
 
-    public RegistroDTO create(RegistroDTO newData) {
+    public Registro create(RegistroDTO newData) {
         Registro entity = convertToEntity(newData);
         Registro savedEntity = registroRepository.save(entity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
-    public RegistroDTO update(Long id, RegistroDTO updatedData) {
+    public Registro update(Long id, RegistroDTO updatedData) {
         findEntityById(id);
         updatedData.setId(id);
         Registro updatedEntity = convertToEntity(updatedData);    
         Registro savedEntity = registroRepository.save(updatedEntity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
     public void delete(Long id) {

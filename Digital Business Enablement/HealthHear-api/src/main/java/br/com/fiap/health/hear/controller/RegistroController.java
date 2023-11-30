@@ -1,6 +1,7 @@
 package br.com.fiap.health.hear.controller;
 
 import br.com.fiap.health.hear.dto.RegistroDTO;
+import br.com.fiap.health.hear.model.Registro;
 import br.com.fiap.health.hear.service.RegistroService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class RegistroController {
     private RegistroService registroService;
 
     @GetMapping
-    public ResponseEntity<Page<RegistroDTO>> listAll(
+    public ResponseEntity<Page<Registro>> listAll(
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageRequest
     ) {
         log.info("(" + getClass().getSimpleName() + ") - Buscando todos(as)");
@@ -33,19 +34,19 @@ public class RegistroController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<RegistroDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<Registro> findById(@PathVariable Long id) {
         log.info("(" + getClass().getSimpleName() + ") - Exibindo por ID: " + id);
         return ResponseEntity.ok(registroService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<RegistroDTO> create(@RequestBody @Valid RegistroDTO newData) {
+    public ResponseEntity<Registro> create(@RequestBody @Valid RegistroDTO newData) {
         log.info("(" + getClass().getSimpleName() + ") - Cadastrando: " + newData);
         return ResponseEntity.status(HttpStatus.CREATED).body(registroService.create(newData));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<RegistroDTO> update(@PathVariable Long id, @RequestBody @Valid RegistroDTO updatedData) {
+    public ResponseEntity<Registro> update(@PathVariable Long id, @RequestBody @Valid RegistroDTO updatedData) {
         log.info("(" + getClass().getSimpleName() + ") - Atualizando por ID: " + id);
         return ResponseEntity.ok(registroService.update(id, updatedData));
     }

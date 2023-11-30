@@ -1,5 +1,6 @@
 package br.com.fiap.health.hear.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -45,6 +46,7 @@ public class Registro {
     @Getter @Setter
     private Usuario usuario;
 
+    @JsonManagedReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "REGISTRO_ESPECIALIDADE",

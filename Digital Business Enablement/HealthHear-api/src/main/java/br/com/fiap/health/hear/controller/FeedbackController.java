@@ -1,6 +1,7 @@
 package br.com.fiap.health.hear.controller;
 
 import br.com.fiap.health.hear.dto.FeedbackDTO;
+import br.com.fiap.health.hear.model.Feedback;
 import br.com.fiap.health.hear.service.FeedbackService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class FeedbackController {
     private FeedbackService feedbackService;
 
     @GetMapping
-    public ResponseEntity<Page<FeedbackDTO>> listAll(
+    public ResponseEntity<Page<Feedback>> listAll(
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageRequest
     ) {
         log.info("(" + getClass().getSimpleName() + ") - Buscando todos(as)");
@@ -33,19 +34,19 @@ public class FeedbackController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<FeedbackDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<Feedback> findById(@PathVariable Long id) {
         log.info("(" + getClass().getSimpleName() + ") - Exibindo por ID: " + id);
         return ResponseEntity.ok(feedbackService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<FeedbackDTO> create(@RequestBody @Valid FeedbackDTO newData) {
+    public ResponseEntity<Feedback> create(@RequestBody @Valid FeedbackDTO newData) {
         log.info("(" + getClass().getSimpleName() + ") - Cadastrando: " + newData);
         return ResponseEntity.status(HttpStatus.CREATED).body(feedbackService.create(newData));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<FeedbackDTO> update(@PathVariable Long id, @RequestBody @Valid FeedbackDTO updatedData) {
+    public ResponseEntity<Feedback> update(@PathVariable Long id, @RequestBody @Valid FeedbackDTO updatedData) {
         log.info("(" + getClass().getSimpleName() + ") - Atualizando por ID: " + id);
         return ResponseEntity.ok(feedbackService.update(id, updatedData));
     }

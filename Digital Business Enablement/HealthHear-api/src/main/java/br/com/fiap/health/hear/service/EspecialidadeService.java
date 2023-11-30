@@ -26,27 +26,27 @@ public class EspecialidadeService {
     @Autowired
     private RegistroService registroService;
 
-    public Page<EspecialidadeDTO> listAll(Pageable pageRequest) {
-        return especialidadeRepository.findAll(pageRequest).map(this::convertToDto);
+    public Page<Especialidade> listAll(Pageable pageRequest) {
+        return especialidadeRepository.findAll(pageRequest);
     }
 
-    public EspecialidadeDTO findById(Long id) {
+    public Especialidade findById(Long id) {
         Especialidade entity = findEntityById(id);
-        return convertToDto(entity);
+        return entity;
     }
 
-    public EspecialidadeDTO create(EspecialidadeDTO newData) {
+    public Especialidade create(EspecialidadeDTO newData) {
         Especialidade entity = convertToEntity(newData);
         Especialidade savedEntity = especialidadeRepository.save(entity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
-    public EspecialidadeDTO update(Long id, EspecialidadeDTO updatedData) {
+    public Especialidade update(Long id, EspecialidadeDTO updatedData) {
         findEntityById(id);
         updatedData.setId(id);
         Especialidade updatedEntity = convertToEntity(updatedData);    
         Especialidade savedEntity = especialidadeRepository.save(updatedEntity);
-        return convertToDto(savedEntity);
+        return savedEntity;
     }
 
     public void delete(Long id) {

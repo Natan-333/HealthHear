@@ -8,10 +8,9 @@ import {
 import { Dimensions } from 'react-native';
 import { UserPhoto } from './UserPhoto';
 import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
-import { formatDocument } from '@utils/FormatDocument';
+import { formatDocument } from '@utils/Formats';
 import { useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
-import { IUser } from 'src/interfaces/IUser';
 import { IDocument } from 'src/interfaces/IDocument';
 import { Star} from 'phosphor-react-native';
 
@@ -65,7 +64,7 @@ export function Professionals({
               />
 
             <Box
-              bg={true ? 'blue.700' : 'gray.600'}
+              bg={'blue.700'}
               rounded='full'
               px='2'
               alignItems='center'
@@ -81,7 +80,7 @@ export function Professionals({
 
             </Box>
             
-            <Text fontSize='lg' fontFamily='bold' color='gray.900' noOfLines={1} background={'red.100'} mt={2}>
+            <Text fontSize='lg' fontFamily='bold' color='gray.900' noOfLines={1} mt={2}>
               {usuario.nome}
             </Text>
 

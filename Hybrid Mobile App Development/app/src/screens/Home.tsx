@@ -6,6 +6,7 @@ import {
   Flex,
   HStack,
   Pressable,
+  ScrollView,
   Skeleton,
   Text,
   useTheme,
@@ -40,9 +41,10 @@ import { ProductMap } from '@mappers/ProductMap';
 import { IProduct } from 'src/interfaces/IProduct';
 import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 import { Loading } from '@components/Loading';
+import { Feedbacks } from '@components/Feedbacks';
 
 const PHOTO_SIZE = 12;
-const { height, width } = Dimensions.get('screen');
+const { height } = Dimensions.get('screen');
 
 export function Home() {
   const { colors, sizes } = useTheme();
@@ -103,8 +105,47 @@ export function Home() {
         }
       ]
     },
-
 	]
+
+  const examplesFeedbacks = [
+    {
+      "id": 1,
+      "data": "2023-02-22T00:00:00.000+00:00",
+      "titulo": "Muito bom médico",
+      "descricao": "Foi atencioso durante sua consulta e me atendeu da melhor forma.",
+      "nota": 5,
+      "paciente": {
+        "id": 1,
+        "nome": "Kaue Caponero",
+        "email": "kaue@hotmail.com",
+        "cpf": "43101167876",
+        "imagem": "https://avatars.githubusercontent.com/u/111543330?v=4"
+      },
+      "registro": {
+        "id": 2,
+        "numero": "123456",
+        "tipoRegistro": "CRM",
+        "uf": "SP",
+        "usuario": {
+          "id": 3,
+          "nome": "Stanley Bittar",
+          "email": "stanley@hotmail.com",
+          "cpf": "43101167873",
+          "imagem": "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394"
+        },
+        "especialidades": [
+          {
+            "id": 1,
+            "nome": "Neurologia"
+          }
+        ]
+      },
+      "isAnonimo": false,
+      "acao": null,
+      "imagem": null,
+      "tipo": "elogio"
+    }
+  ]
 
   function handleOpenModalize() {
     modalizeRef.current?.open();
@@ -227,7 +268,7 @@ export function Home() {
   }, []);
 
   return (
-    <VStack flex={1} px='6' safeAreaTop>
+    <ScrollView flex={1} px='6' pb={4} mt={10}>
       <HStack w='full' mt='2'>
         {photoIsLoading ? (
           <Skeleton
@@ -494,6 +535,41 @@ export function Home() {
           </VStack>
         </Modalize>
       </Portal>
-    </VStack>
+
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={examplesFeedbacks}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => <Feedbacks {...item} />}
+          horizontal={false}
+          numColumns={2}
+          columnWrapperStyle={{
+            justifyContent: 'space-between',
+            gap: 15
+          }}
+          contentContainerStyle={
+            data.length <= 0 && {
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }
+          }
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <Text
+              color='gray.500'
+              fontSize='sm'
+              fontFamily='regular'
+              mt='6'
+              mb='2'
+            >
+              Nenhum profissional encontrado!
+            </Text>
+          }
+        />
+      )}
+    </ScrollView>
   );
 }

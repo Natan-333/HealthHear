@@ -16,10 +16,10 @@ public class FeedbackDTO {
     private Date data;
     private String titulo;
     private String descricao;
-    private Double nota;
+    private BigDecimal nota;
     private Long idPaciente;
     private Long idRegistro;
-    private Integer isAnonimo;
+    private Boolean isAnonimo;
     private String acao;
     private String imagem;
     private String tipo;

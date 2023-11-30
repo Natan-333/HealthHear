@@ -12,5 +12,5 @@ import java.util.Set;
 public class EspecialidadeDTO {
     private Long id;
     private String nome;
-    private Long idRegistro;
+    private Set<Long> idRegistros;
 }

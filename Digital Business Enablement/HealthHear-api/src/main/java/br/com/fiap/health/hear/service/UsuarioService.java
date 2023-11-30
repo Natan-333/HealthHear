@@ -1,8 +1,10 @@
 package br.com.fiap.health.hear.service;
 
+import br.com.fiap.health.hear.dto.LoginDTO;
 import br.com.fiap.health.hear.dto.UsuarioDTO;
 import br.com.fiap.health.hear.model.Usuario;
 import br.com.fiap.health.hear.repository.UsuarioRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,8 +26,8 @@ public class UsuarioService {
     }
 
     public UsuarioDTO findById(Long id) {
-        Usuario usuario = findEntityById(id);
-        return convertToDto(usuario);
+        Usuario entity = findEntityById(id);
+        return convertToDto(entity);
     }
 
     public UsuarioDTO create(UsuarioDTO newData) {
@@ -34,10 +37,9 @@ public class UsuarioService {
     }
 
     public UsuarioDTO update(Long id, UsuarioDTO updatedData) {
-        Usuario entity = findEntityById(id);
+        findEntityById(id);
         updatedData.setId(id);
-        Usuario updatedEntity = convertToEntity(updatedData);
-        updatedEntity.setId(entity.getId());
+        Usuario updatedEntity = convertToEntity(updatedData);    
         Usuario savedEntity = usuarioRepository.save(updatedEntity);
         return convertToDto(savedEntity);
     }
@@ -49,30 +51,40 @@ public class UsuarioService {
 
     public Usuario findEntityById(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "(Usuario) - Usuario não encontrado(a) por ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "(" + getClass().getSimpleName() + ") - Usuario não encontrada por ID: " + id));
     }
 
-    private UsuarioDTO convertToDto(Usuario usuario) {
+    private UsuarioDTO convertToDto(Usuario entity) {
         UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(usuario.getId());
-        dto.setEmail(usuario.getEmail());
-        dto.setSenha(usuario.getSenha());
-        dto.setCpf(usuario.getCpf());
-        dto.setImagem(usuario.getImagem());
-
+        dto.setId(entity.getId());
+        dto.setNome(entity.getNome());
+        dto.setEmail(entity.getEmail());
+        dto.setSenha(entity.getSenha());
+        dto.setCpf(entity.getCpf());
+        dto.setImagem(entity.getImagem());
         return dto;
     }
 
     private Usuario convertToEntity(UsuarioDTO dto) {
-        Usuario usuario = new Usuario();
-        usuario.setId(dto.getId());
-        usuario.setEmail(dto.getEmail());
-        usuario.setSenha(dto.getSenha());
-        usuario.setCpf(dto.getCpf());
-        usuario.setImagem(dto.getImagem());
-
-        return usuario;
+        if (Objects.isNull(dto)) {
+            throw new IllegalArgumentException("(" + getClass().getSimpleName() + ") - UsuarioDTO não pode ser nulo.");
+        }
+        Usuario entity;
+        if (dto.getId() != null) {
+            entity = findEntityById(dto.getId());
+        } else {
+            entity = new Usuario();
+        }
+        entity.setNome(dto.getNome());
+        entity.setEmail(dto.getEmail());
+        entity.setSenha(dto.getSenha());
+        entity.setCpf(dto.getCpf());
+        entity.setImagem(dto.getImagem());
+        return entity;
     }
 
-
+    public Optional<Usuario> validarLogin(LoginDTO loginDTO) {
+        return usuarioRepository.findByEmail(loginDTO.getEmail())
+                .filter(entity -> entity.getSenha().equals(loginDTO.getSenha()));
+    }
 }

@@ -13,6 +13,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Entity
 @Table(name = "FEEDBACK")
@@ -35,7 +36,7 @@ public class Feedback {
 
     @Column(name = "NOTA_FEEDBACK", nullable = false)
     @Min(1)@Max(5)
-    private Long nota;
+    private BigDecimal nota;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "ID_PACIENTE", referencedColumnName = "ID_USUARIO", foreignKey = @ForeignKey(name = "FK_FEEDBACK_PACIENTE"))

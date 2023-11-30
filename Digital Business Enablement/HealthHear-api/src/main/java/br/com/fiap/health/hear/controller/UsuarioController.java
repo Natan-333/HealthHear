@@ -3,8 +3,6 @@ package br.com.fiap.health.hear.controller;
 import br.com.fiap.health.hear.dto.UsuarioDTO;
 import br.com.fiap.health.hear.service.UsuarioService;
 
-import br.com.fiap.health.hear.dto.UsuarioDTO;
-import br.com.fiap.health.hear.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

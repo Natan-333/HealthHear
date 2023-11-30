@@ -1,7 +1,6 @@
 package br.com.fiap.health.hear.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
 import lombok.*;
 
@@ -12,6 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Entity
 @Table(name = "RESPOSTA")
@@ -35,6 +35,4 @@ public class Resposta {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "ID_FEEDBACK", referencedColumnName = "ID_FEEDBACK", foreignKey = @ForeignKey(name = "FK_RESPOSTA_FEEDBACK"))
     private Feedback feedback;
-
-
 }

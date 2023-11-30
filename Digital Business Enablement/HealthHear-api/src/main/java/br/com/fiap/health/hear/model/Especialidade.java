@@ -5,13 +5,15 @@ import jakarta.validation.constraints.*;
 
 import lombok.*;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Entity
 @Table(name = "ESPECIALIDADE", uniqueConstraints = {
@@ -22,10 +24,12 @@ public class Especialidade {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_ESPECIALIDADE")
     @SequenceGenerator(name = "SQ_ESPECIALIDADE", sequenceName = "SQ_ESPECIALIDADE", allocationSize = 1)
     @Column(name = "ID_ESPECIALIDADE")
+    @Getter @Setter
     private Long id;
 
     @Column(name = "NOME_ESPECIALIDADE", nullable = false)
     @NotBlank(message = "O nome da especialidade não pode estar vazio.")
+    @Getter @Setter
     private String nome;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -46,7 +50,24 @@ public class Especialidade {
                     )
             }
     )
-    private Set<Registro> registros;
+    private Set<Registro> registros = new LinkedHashSet<>();
 
+    public Optional<Especialidade> addRegistro(Registro registro) {
+        if (this.registros == null) {
+            this.registros = new LinkedHashSet<>();
+        }
+        this.registros.add(registro);
+        if (!registro.getEspecialidades().contains(this)) registro.getEspecialidades().add(this);
+        return Optional.of(this);
+    }    
 
+    public Especialidade removeRegistro(Registro registro) {
+        this.registros.remove(registro);
+        if (registro.getEspecialidades().contains(this)) registro.removeEspecialidade(this);
+        return this;
+    }
+
+    public Set<Registro> getRegistros() {
+        return Collections.unmodifiableSet(registros);
+    }
 }

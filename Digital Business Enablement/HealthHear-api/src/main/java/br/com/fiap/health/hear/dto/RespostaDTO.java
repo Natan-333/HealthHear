@@ -15,5 +15,4 @@ public class RespostaDTO {
     private String descricao;
     private Long idUsuario;
     private Long idFeedback;
-
 }

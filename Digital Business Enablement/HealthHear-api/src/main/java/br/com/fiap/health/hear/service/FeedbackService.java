@@ -3,8 +3,7 @@ package br.com.fiap.health.hear.service;
 import br.com.fiap.health.hear.dto.FeedbackDTO;
 import br.com.fiap.health.hear.model.Feedback;
 import br.com.fiap.health.hear.repository.FeedbackRepository;
-import br.com.fiap.health.hear.repository.RegistroRepository;
-import br.com.fiap.health.hear.repository.UsuarioRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,18 +20,18 @@ public class FeedbackService {
     private FeedbackRepository feedbackRepository;
 
     @Autowired
-    private RegistroRepository registroRepository;
+    private UsuarioService usuarioService;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private RegistroService registroService;
 
     public Page<FeedbackDTO> listAll(Pageable pageRequest) {
         return feedbackRepository.findAll(pageRequest).map(this::convertToDto);
     }
 
     public FeedbackDTO findById(Long id) {
-        Feedback feedback = findEntityById(id);
-        return convertToDto(feedback);
+        Feedback entity = findEntityById(id);
+        return convertToDto(entity);
     }
 
     public FeedbackDTO create(FeedbackDTO newData) {
@@ -42,10 +41,9 @@ public class FeedbackService {
     }
 
     public FeedbackDTO update(Long id, FeedbackDTO updatedData) {
-        Feedback entity = findEntityById(id);
+        findEntityById(id);
         updatedData.setId(id);
-        Feedback updatedEntity = convertToEntity(updatedData);
-        updatedEntity.setId(entity.getId());
+        Feedback updatedEntity = convertToEntity(updatedData);    
         Feedback savedEntity = feedbackRepository.save(updatedEntity);
         return convertToDto(savedEntity);
     }
@@ -57,40 +55,51 @@ public class FeedbackService {
 
     public Feedback findEntityById(Long id) {
         return feedbackRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "(Feedback) - Feedback não encontrado por ID: " + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "(" + getClass().getSimpleName() + ") - Feedback não encontrada por ID: " + id));
     }
 
-    private FeedbackDTO convertToDto(Feedback feedback) {
+    private FeedbackDTO convertToDto(Feedback entity) {
         FeedbackDTO dto = new FeedbackDTO();
-        dto.setId(feedback.getId());
-        dto.setData(feedback.getData());
-        dto.setTitulo(feedback.getTitulo());
-        dto.setDescricao(feedback.getDescricao());
-        dto.setNota(feedback.getNota());
-        dto.setIdPaciente(feedback.getPaciente().getId());
-        dto.setIdRegistro(feedback.getRegistro().getId());
-        dto.setIsAnonimo(feedback.getIsAnonimo() ? 1 : 0);
-        dto.setAcao(feedback.getAcao());
-        dto.setImagem(feedback.getImagem());
-        dto.setTipo(feedback.getTipo());
+        dto.setId(entity.getId());
+        dto.setData(entity.getData());
+        dto.setTitulo(entity.getTitulo());
+        dto.setDescricao(entity.getDescricao());
+        dto.setNota(entity.getNota());
+        dto.setIdPaciente(entity.getPaciente() != null ? entity.getPaciente().getId() : null);
+        dto.setIdRegistro(entity.getRegistro() != null ? entity.getRegistro().getId() : null);
+        dto.setIsAnonimo(entity.getIsAnonimo());
+        dto.setAcao(entity.getAcao());
+        dto.setImagem(entity.getImagem());
+        dto.setTipo(entity.getTipo());
         return dto;
     }
 
     private Feedback convertToEntity(FeedbackDTO dto) {
-        Feedback feedback = new Feedback();
-        feedback.setId(dto.getId());
-        feedback.setData(dto.getData());
-        feedback.setTitulo(dto.getTitulo());
-        feedback.setDescricao(dto.getDescricao());
-        feedback.setNota(dto.getNota());
-        feedback.setPaciente(usuarioRepository.findById(dto.getIdPaciente())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "(Feedback) - Paciente não encontrado por ID: " + dto.getIdPaciente())));
-        feedback.setRegistro(registroRepository.findById(dto.getIdRegistro())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "(Feedback) - Registro não encontrado por ID: " + dto.getIdRegistro())));
-        feedback.setIsAnonimo(dto.getIsAnonimo() != null && dto.getIsAnonimo() == 1); // Mapeando para Boolean conforme o modelo
-        feedback.setAcao(dto.getAcao());
-        feedback.setImagem(dto.getImagem());
-        feedback.setTipo(dto.getTipo());
-        return feedback;
+        if (Objects.isNull(dto)) {
+            throw new IllegalArgumentException("(" + getClass().getSimpleName() + ") - FeedbackDTO não pode ser nulo.");
+        }
+        Feedback entity;
+        if (dto.getId() != null) {
+            entity = findEntityById(dto.getId());
+        } else {
+            entity = new Feedback();
+        }
+        if (dto.getIdPaciente() == null) {
+            throw new IllegalArgumentException("(" + getClass().getSimpleName() + ") - ID Paciente não pode ser nulo.");
+        }
+        if (dto.getIdRegistro() == null) {
+            throw new IllegalArgumentException("(" + getClass().getSimpleName() + ") - ID Registro não pode ser nulo.");
+        }
+        entity.setData(dto.getData());
+        entity.setTitulo(dto.getTitulo());
+        entity.setDescricao(dto.getDescricao());
+        entity.setNota(dto.getNota());
+        entity.setPaciente(usuarioService.findEntityById(dto.getIdPaciente()));
+        entity.setRegistro(registroService.findEntityById(dto.getIdRegistro()));
+        entity.setIsAnonimo(dto.getIsAnonimo());
+        entity.setAcao(dto.getAcao());
+        entity.setImagem(dto.getImagem());
+        entity.setTipo(dto.getTipo());
+        return entity;
     }
 }

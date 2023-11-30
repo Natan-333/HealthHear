@@ -5,14 +5,12 @@ import jakarta.validation.constraints.*;
 
 import lombok.*;
 
-import java.util.Collections;
-import java.util.Set;
-
 @Getter
 @Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @Entity
 @Table(name = "USUARIO", uniqueConstraints = {
@@ -25,6 +23,10 @@ public class Usuario {
     @SequenceGenerator(name = "SQ_USUARIO", sequenceName = "SQ_USUARIO", allocationSize = 1)
     @Column(name = "ID_USUARIO")
     private Long id;
+
+    @Column(name = "NOME_USUARIO", nullable = false)
+    @NotBlank(message = "O nome não pode estar vazio.")
+    private String nome;
 
     @Column(name = "EMAIL_USUARIO", nullable = false)
     @NotBlank(message = "O endereço de e-mail não pode estar vazio.")
@@ -42,7 +44,4 @@ public class Usuario {
 
     @Column(name = "IMAGEM_USUARIO")
     private String imagem;
-
-
-
 }

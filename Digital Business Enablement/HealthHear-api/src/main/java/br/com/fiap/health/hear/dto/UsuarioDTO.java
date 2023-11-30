@@ -2,8 +2,6 @@ package br.com.fiap.health.hear.dto;
 
 import lombok.*;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -11,6 +9,7 @@ import java.util.Set;
 @ToString
 public class UsuarioDTO {
     private Long id;
+    private String nome;
     private String email;
     private String senha;
     private String cpf;

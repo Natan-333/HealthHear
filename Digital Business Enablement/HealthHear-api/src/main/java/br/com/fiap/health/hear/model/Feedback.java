@@ -36,17 +36,18 @@ public class Feedback {
 
     @Column(name = "NOTA_FEEDBACK", nullable = false)
     @NotNull(message = "O campo nota não pode estar vazio.")
-    @Min(1)@Max(5)
+    @Positive
+    @Min(1) @Max(5)
     private BigDecimal nota;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @NotNull(message = "O campo paciente não pode estar vazio.")
     @JoinColumn(name = "ID_PACIENTE", referencedColumnName = "ID_USUARIO", foreignKey = @ForeignKey(name = "FK_FEEDBACK_PACIENTE"), nullable = false)
+    @NotNull(message = "O campo paciente não pode estar vazio.")
     private Usuario paciente;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @NotNull(message = "O campo registro não pode estar vazio.")
     @JoinColumn(name = "ID_REGISTRO", referencedColumnName = "ID_REGISTRO", foreignKey = @ForeignKey(name = "FK_FEEDBACK_REGISTRO"), nullable = false)
+    @NotNull(message = "O campo registro não pode estar vazio.")
     private Registro registro;
 
     @Column(name = "IS_ANONIMO", nullable = false)

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashSet;
@@ -39,12 +40,14 @@ public class RegistroService {
         return entity;
     }
 
+    @Transactional
     public Registro create(RegistroDTO newData) {
         Registro entity = convertToEntity(newData);
         Registro savedEntity = registroRepository.save(entity);
         return savedEntity;
     }
 
+    @Transactional
     public Registro update(Long id, RegistroDTO updatedData) {
         findEntityById(id);
         updatedData.setId(id);
@@ -53,6 +56,7 @@ public class RegistroService {
         return savedEntity;
     }
 
+    @Transactional
     public void delete(Long id) {
         Registro entity = findEntityById(id);
         if (entity.getEspecialidades() != null) {

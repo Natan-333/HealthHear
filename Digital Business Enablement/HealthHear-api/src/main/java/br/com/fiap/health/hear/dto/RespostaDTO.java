@@ -6,17 +6,15 @@ import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class RespostaDTO {
 
     private Long id;
 
-    @PastOrPresent
     @NotNull(message = "O campo data não pode estar vazio.")
+    @PastOrPresent
     private Date data;
 
     @NotBlank(message = "O campo descricao não pode estar vazio.")

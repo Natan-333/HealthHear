@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Objects;
@@ -30,12 +31,14 @@ public class UsuarioService {
         return entity;
     }
 
+    @Transactional
     public Usuario create(UsuarioDTO newData) {
         Usuario entity = convertToEntity(newData);
         Usuario savedEntity = usuarioRepository.save(entity);
         return savedEntity;
     }
 
+    @Transactional
     public Usuario update(Long id, UsuarioDTO updatedData) {
         findEntityById(id);
         updatedData.setId(id);
@@ -44,6 +47,7 @@ public class UsuarioService {
         return savedEntity;
     }
 
+    @Transactional
     public void delete(Long id) {
         Usuario entity = findEntityById(id);
         usuarioRepository.delete(entity);

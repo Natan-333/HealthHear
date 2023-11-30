@@ -29,12 +29,12 @@ public class Resposta {
     private String descricao;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @NotNull(message = "O campo usuario não pode estar vazio.")
     @JoinColumn(name = "ID_USUARIO", referencedColumnName = "ID_USUARIO", foreignKey = @ForeignKey(name = "FK_RESPOSTA_USUARIO"))
+    @NotNull(message = "O campo usuario não pode estar vazio.")
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @NotNull(message = "O campo feedback não pode estar vazio.")
     @JoinColumn(name = "ID_FEEDBACK", referencedColumnName = "ID_FEEDBACK", foreignKey = @ForeignKey(name = "FK_RESPOSTA_FEEDBACK"))
+    @NotNull(message = "O campo feedback não pode estar vazio.")
     private Feedback feedback;
 }

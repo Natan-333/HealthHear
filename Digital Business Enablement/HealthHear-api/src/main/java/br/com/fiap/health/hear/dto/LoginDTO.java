@@ -4,11 +4,9 @@ import jakarta.validation.constraints.*;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class LoginDTO {
 
     @NotBlank(message = "O endereço de e-mail não pode estar vazio.")

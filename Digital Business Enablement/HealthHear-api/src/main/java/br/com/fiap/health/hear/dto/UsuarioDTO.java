@@ -4,11 +4,9 @@ import jakarta.validation.constraints.*;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class UsuarioDTO {
 
     private Long id;

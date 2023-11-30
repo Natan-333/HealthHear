@@ -6,11 +6,9 @@ import lombok.*;
 
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class EspecialidadeDTO {
 
     private Long id;

@@ -7,18 +7,15 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Getter
-@Setter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class FeedbackDTO {
 
     private Long id;
 
-    @PastOrPresent
     @NotNull(message = "O campo data não pode estar vazio.")
+    @PastOrPresent
     private Date data;
 
     @NotBlank(message = "O campo titulo não pode estar vazio.")
@@ -27,8 +24,9 @@ public class FeedbackDTO {
     @NotBlank(message = "O campo descricao não pode estar vazio.")
     private String descricao;
 
-    @PositiveOrZero
     @NotNull(message = "O campo nota não pode estar vazio.")
+    @Positive
+    @Min(1) @Max(5)
     private BigDecimal nota;
 
     @NotNull(message = "O campo idPaciente não pode estar vazio.")

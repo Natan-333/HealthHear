@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashSet;
@@ -35,12 +36,14 @@ public class EspecialidadeService {
         return entity;
     }
 
+    @Transactional
     public Especialidade create(EspecialidadeDTO newData) {
         Especialidade entity = convertToEntity(newData);
         Especialidade savedEntity = especialidadeRepository.save(entity);
         return savedEntity;
     }
 
+    @Transactional
     public Especialidade update(Long id, EspecialidadeDTO updatedData) {
         findEntityById(id);
         updatedData.setId(id);
@@ -49,6 +52,7 @@ public class EspecialidadeService {
         return savedEntity;
     }
 
+    @Transactional
     public void delete(Long id) {
         Especialidade entity = findEntityById(id);
         if (entity.getRegistros() != null) {

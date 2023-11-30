@@ -6,11 +6,9 @@ import lombok.*;
 
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class RegistroDTO {
 
     private Long id;

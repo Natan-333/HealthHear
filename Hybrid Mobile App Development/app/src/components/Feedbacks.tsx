@@ -142,5 +142,4 @@ export function Feedbacks({
             </VStack>
         </Pressable>
     );
-    
 }

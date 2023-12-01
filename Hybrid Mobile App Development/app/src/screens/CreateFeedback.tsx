@@ -35,9 +35,19 @@ import { api } from '@services/api';
 // Component import
 import {
   FeedbackImage,
-  FeedbackImageLoading,
   FeedbackImageUpload
 } from '@components/index';
+
+import { Select } from '@components/Select';
+import { Rate } from '@components/Rate';
+
+// Data import
+import { feedbackTypes } from '../data/feedbackTypes';
+import { documentTypes } from '../data/documentTypes';
+import { uf as ufValues } from '../data/uf';
+
+// Types import
+import { IFeedback } from '../interfaces/IFeedback';
 
 const PHOTO_SIZE = 100;
 
@@ -51,24 +61,24 @@ export function CreateFeedback() {
   const toast = useToast();
   const route = useRoute();
 
-  const params = route.params as IProduct;
+  const params = route.params as IFeedback;
 
   // State
-  const [images, setImages] = useState<IPhoto[]>([]);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [isNew, setIsNew] = useState<string>('');
-  const [price, setPrice] = useState('');
+  const [tipo, setTipo] = useState('elogio');
+  const [image, setImage] = useState<IPhoto | null>(null);
+  const [titulo, setTitulo] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [acao, setAcao] = useState('');
   const [acceptTrade, setAcceptTrade] = useState(false);
-  const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState<IPaymentMethods[]>([]);
-  const [isActive, setIsActive] = useState(true);
-  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
   const [headerTitle, setHeaderTitle] = useState('Criar feedback');
+  const [tipoRegistro, setTipoRegistro] = useState('CRM');
+  const [registro, setRegistro] = useState('');
+  const [UF, setUF] = useState('SP');
+  const [nota, setNota] = useState(0);
+  const [anonimo, setAnonimo] = useState(false)
 
   async function handlePhotoSelect() {
-    setPhotoIsLoading(true);
-
     try {
       const photoSelected = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -88,7 +98,7 @@ export function CreateFeedback() {
           type: `${photoSelected.assets[0].type}/${fileExtension}`,
         } as any;
 
-        return setImages((prev) => [photoFile, ...prev]);
+        return setImage(photoFile);
       }
     } catch (error) {
       const isAppError = error instanceof AppError;
@@ -100,22 +110,11 @@ export function CreateFeedback() {
         placement: 'top',
         bgColor: 'red.500',
       });
-    } finally {
-      setPhotoIsLoading(false);
-    }
+    } 
   }
 
   function handleRemovePhoto(photo: IPhoto) {
-    setImages(prev => prev.filter((item) => {
-      if (
-        item.name === photo.name &&
-        photo.uri.match(`${api.defaults.baseURL}/images/`)
-      ) {
-        setImagesToDelete((prev) => [...prev, photo.name]);
-      }
-      return item.name !== photo.name;
-    })
-    );
+    setImage(null);
   }
 
   function findPaymentMethod(payment_method: IPaymentMethods) {
@@ -139,16 +138,14 @@ export function CreateFeedback() {
       bgColor: 'red.500'
     }
 
-    if (images.length <= 0)
+    if (image == null)
       return toast.show({ ...defaultToastProps, title: 'Adicione uma foto.' });
 
-    if (name.trim() === '')
+    if (titulo.trim() === '')
       return toast.show({ ...defaultToastProps, title: 'Informe o título.' });
 
-    if (description.trim() === '')
+    if (descricao.trim() === '')
       return toast.show({ ...defaultToastProps, title: 'Informe a descrição' });
-
-    const rawPrice = Number(maskedPriceToNumber(price)) * 100;
 
     if (paymentMethods.length <= 0) {
       return toast.show({
@@ -158,34 +155,34 @@ export function CreateFeedback() {
       });
     }
 
-    navigate('previewAd', {
-      user,
-      product_images: images,
-      name,
-      description,
-      is_new: isNew === 'Produto novo',
-      price: rawPrice,
-      accept_trade: acceptTrade,
-      payment_methods: paymentMethods,
-      imagesToDelete: imagesToDelete,
-      id: params?.id,
-      is_active: isActive,
-    });
+    // navigate('previewAd', {
+    //   user,
+    //   product_images: image,
+    //   name,
+    //   description,
+    //   is_new: isNew === 'Produto novo',
+    //   price: rawPrice,
+    //   accept_trade: acceptTrade,
+    //   payment_methods: paymentMethods,
+    //   imagesToDelete: imagesToDelete,
+    //   id: params?.id,
+    //   is_active: isActive,
+    // });
   }
 
   useEffect(() => {
-    if (params) {
-      setImages(params.product_images);
-      setName(params.name);
-      setDescription(params.description);
-      setIsNew(params.is_new ? 'Produto novo' : 'Produto usado');
-      setPrice(toMaskedPrice(String(params.price)));
-      setAcceptTrade(params.accept_trade);
-      setPaymentMethods(params.payment_methods);
-      setIsActive(params?.is_active ?? true);
-      setImagesToDelete([]);
-      setHeaderTitle('Editar anúncio');
-    }
+    // if (params) {
+    //   setImage(params.evidencia);
+    //   setName(params.name);
+    //   setDescription(params.description);
+    //   setIsNew(params.is_new ? 'Produto novo' : 'Produto usado');
+    //   setPrice(toMaskedPrice(String(params.price)));
+    //   setAcceptTrade(params.accept_trade);
+    //   setPaymentMethods(params.payment_methods);
+    //   setIsActive(params?.is_active ?? true);
+    //   setImagesToDelete([]);
+    //   setHeaderTitle('Editar anúncio');
+    // }
   }, [params]);
 
   return (
@@ -206,87 +203,118 @@ export function CreateFeedback() {
       </HStack>
 
       <ScrollView px='6' contentContainerStyle={{ paddingBottom: 20 }}>
-        <Text color='gray.600' fontFamily='bold' fontSize='md' mt={6} mb={1}>
-          Imagens
+
+        <Text color='gray.600' fontFamily='bold' fontSize='lg' mt={5} mb={2}>
+          Construa sua avaliação
         </Text>
 
-        <Text color='gray.500' fontFamily='regular' fontSize='sm'>
-          Selecione uma imagem para expressar sua crítica, denúncia ou elogio.
+        <Text color='gray.500' fontFamily='regular' fontSize='md' mt={2} mb={1}>
+          Tipo de avaliação
         </Text>
 
-        <FlatList
-          data={images}
-          keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <FeedbackImage image={item} handleRemovePhoto={handleRemovePhoto} />
-          )}
-          ListHeaderComponent={photoIsLoading ? <FeedbackImageLoading /> : null}
-          ListFooterComponent={
-            images.length < 1 && !photoIsLoading ?
-              <FeedbackImageUpload onPress={handlePhotoSelect} /> :
-              null
-          }
-          contentContainerStyle={{ paddingVertical: sizes[6], gap: 8 }}
-          horizontal
+        <Select
+          items={feedbackTypes}
+          selectedValue={tipo}
+          onValueChange={value => setTipo(value)}
         />
 
-        <Text color='gray.600' fontFamily='bold' fontSize='md' mb='3'>
-          Comece sua avaliação
+        <Text color='gray.500' fontFamily='regular' fontSize='md' mt={2} mb={1}>
+          Título
         </Text>
 
         <Input
-          placeholder='Título'
-          value={name}
-          onChangeText={setName}
+          placeholder='Resumo de sua avaliação'
+          value={titulo}
+          onChangeText={setTitulo}
         />
 
+        <Text color='gray.500' fontFamily='regular' fontSize='md' mb={1}>
+          Descrição
+        </Text>
+
         <Input
-          placeholder='Mais detalhes...'
-          value={description}
-          onChangeText={setDescription}
+          placeholder='Descreva seu relato com mais detalhes'
+          value={descricao}
+          onChangeText={setDescricao}
           minH='20'
           h='auto'
           multiline
           textAlignVertical="top"
         />
 
-        <Radio
-          data={['Produto novo', 'Produto usado']}
-          name='Estado do produto'
-          accessibilityLabel='Escolha o estado do produto'
-          value={isNew}
-          onChange={(newValue) => {
-            setIsNew(newValue);
-          }}
-        />
+        {/* Uma ação só será tomada se for uma avaliação ruim, ou seja, uma denúncia ou reclamação */}
+        {tipo !== 'elogio' && (
+          <>
+            <Text color='gray.500' fontFamily='regular' fontSize='md' mt={2} mb={1}>
+              Ação tomada
+            </Text>
+
+            <Input
+              placeholder='O que você fez em relação a isso?'
+              value={acao}
+              onChangeText={setAcao}
+            />
+          </>
+        )}
+
+        <Text color='gray.600' fontFamily='bold' fontSize='lg' mt={4} mb={1}>
+          Evidência
+        </Text>
+
+        <Text color='gray.500' fontFamily='regular' fontSize='md' mb={2}>
+          Selecione uma imagem para dar mais credibilidade a sua crítica, denúncia ou elogio.
+        </Text>
+
+        {image
+          ?
+          (<FeedbackImage image={image} handleRemovePhoto={handleRemovePhoto} />)
+          :
+          (<FeedbackImageUpload onPress={handlePhotoSelect} />)
+        }
 
         <Text color='gray.600' fontFamily='bold' fontSize='md' mt={6} mb={3}>
-          Venda
+          Profissional avaliado
+        </Text>
+
+        <Text color='gray.500' fontFamily='regular' fontSize='md' mb={2}>
+          Tipo de registro
+        </Text>
+
+        <Select 
+          items={documentTypes}
+          selectedValue={tipoRegistro}
+          onValueChange={value => setTipoRegistro(value)}
+        />
+
+        <Text color='gray.500' fontFamily='regular' fontSize='md' mb={2}>
+          {tipoRegistro}
         </Text>
 
         <Input
-          leftElement={
-            <Text color='gray.700' fontFamily='regular' fontSize='md' ml='4'>
-              R$
-            </Text>
-          }
-          placeholder='Valor do produto'
-          value={price}
-          onChangeText={(text) => {
-            if (text === '0,0' || text === '0,') {
-              setPrice('');
-              return;
-            }
-
-            const firstMaskedText = toMaskedPrice(text);
-            const firstMaskedTextConvertToNumber =
-              maskedPriceToNumber(firstMaskedText);
-            const cleanMaskedText = toMaskedPrice(
-              firstMaskedTextConvertToNumber
-            );
-            setPrice(cleanMaskedText);
-          }}
+          placeholder={`Digite o ${tipoRegistro} do profissional`}
+          value={registro}
+          onChangeText={setRegistro}
         />
+
+        <Text color='gray.500' fontFamily='regular' fontSize='md' mb={2}>
+          UF
+        </Text>
+
+        <Select 
+          items={ufValues} 
+          selectedValue={UF}
+          onValueChange={value => setUF(value)}
+        />
+
+        {/* Se é uma denúncia, não faz sentido dar uma nota ao profissional. */}
+        {tipo !== 'denuncia' && (
+          <>
+            <Text color='gray.600' fontFamily='bold' fontSize='md' mt={6} mb={3}>
+              Nota
+            </Text>
+            <Rate value={nota} setValue={setNota} />
+          </>
+        )}
 
         <Text color='gray.600' fontFamily='bold' fontSize='md' mt={6} mb={3}>
           Deseja manter o comentário anônimo?
@@ -297,53 +325,10 @@ export function CreateFeedback() {
           alignSelf='flex-start'
           offTrackColor='gray.300'
           onTrackColor='blue.400'
-          isChecked={acceptTrade}
-          onToggle={setAcceptTrade}
+          isChecked={anonimo}
+          onToggle={setAnonimo}
         />
 
-        <Text fontSize='md' fontFamily='bold' color='gray.600' mt={6} mb={3}>
-          Meios de pagamento aceitos
-        </Text>
-        <Checkbox
-          value='boleto'
-          isChecked={findPaymentMethod('boleto')}
-          onChange={() => {
-            handlePaymentMethods('boleto');
-          }}
-          label={'Boleto'}
-        />
-        <Checkbox
-          value='pix'
-          isChecked={findPaymentMethod('pix')}
-          onChange={() => {
-            handlePaymentMethods('pix');
-          }}
-          label='Pix'
-        />
-        <Checkbox
-          value='cash'
-          isChecked={findPaymentMethod('cash')}
-          onChange={() => {
-            handlePaymentMethods('cash');
-          }}
-          label='Dinheiro'
-        />
-        <Checkbox
-          value='card'
-          isChecked={findPaymentMethod('card')}
-          onChange={() => {
-            handlePaymentMethods('card');
-          }}
-          label='Cartão de Crédito'
-        />
-        <Checkbox
-          value='deposit'
-          isChecked={findPaymentMethod('deposit')}
-          onChange={() => {
-            handlePaymentMethods('deposit');
-          }}
-          label='Deposito Bancário'
-        />
       </ScrollView>
 
       <HStack w='full' safeAreaBottom bg='white' p='3' px='6'>

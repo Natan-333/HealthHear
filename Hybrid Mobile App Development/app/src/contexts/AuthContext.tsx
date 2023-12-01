@@ -61,21 +61,21 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
   }
 
   async function updateUserProfile() {
-    try {
-      const { data } = await api.get('/users/me');
-      setUser(data);
-      await storageUserSave(data);
-    } catch (error) {
-      throw error;
-    }
+    // try {
+    //   const { data } = await api.get('/users/me');
+    //   setUser(data);
+    //   await storageUserSave(data);
+    // } catch (error) {
+    //   throw error;
+    // }
   }
 
   async function fetchUserFeedback() {
     try {
-      const { data } = await api.get('/users/products');
-      setUserFeedbacks(
-        data.map((item: IFeedback) => data)
-      );
+      if(user.id){
+        const response = await api.get(`/usuarios/feedbacks/${user.id}`);
+        setUserFeedbacks(response.data.content);
+      }
     } catch (error) {
       throw error;
     }

@@ -1,7 +1,11 @@
 package br.com.fiap.health.hear.controller;
 
+import br.com.fiap.health.hear.dto.RegistroDTO;
 import br.com.fiap.health.hear.dto.UsuarioDTO;
+import br.com.fiap.health.hear.model.Feedback;
+import br.com.fiap.health.hear.model.Registro;
 import br.com.fiap.health.hear.model.Usuario;
+import br.com.fiap.health.hear.service.FeedbackService;
 import br.com.fiap.health.hear.service.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private FeedbackService feedbackService;
 
     @GetMapping
     public ResponseEntity<Page<Usuario>> listAll(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -54,5 +61,11 @@ public class UsuarioController {
         log.info("(" + getClass().getSimpleName() + ") - Deletando por ID: " + id);
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/feedbacks/{id}")
+    public ResponseEntity<Page<Feedback>> listFeedbacks(@PathVariable Long id, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        log.info("(" + getClass().getSimpleName() + ") - Buscando feedbacks do usuário");
+        return ResponseEntity.ok(feedbackService.listByPacienteId(id, pageable));
     }
 }

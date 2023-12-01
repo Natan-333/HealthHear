@@ -61,7 +61,6 @@ export function CreateFeedback() {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [acao, setAcao] = useState('');
-  const [headerTitle, setHeaderTitle] = useState('Criar feedback');
   const [tipoRegistro, setTipoRegistro] = useState('CRM');
   const [registro, setRegistro] = useState('');
   const [UF, setUF] = useState('SP');
@@ -177,13 +176,13 @@ export function CreateFeedback() {
           position='absolute'
           left={0}
           ml='6'
-          onPress={() => navigateTabs('myAds')}
+          onPress={() => navigateTabs('myFeedbacks')}
         >
           <ArrowLeft size={sizes[6]} color={colors.gray[700]} />
         </Pressable>
 
         <Text color='gray.700' fontFamily='bold' fontSize='lg+'>
-          {headerTitle}
+          Criar feedback
         </Text>
       </HStack>
 
@@ -322,7 +321,7 @@ export function CreateFeedback() {
           flex={1}
           bgColor='gray.300'
           marginRight={2}
-          onPress={() => navigateTabs('myAds')}
+          onPress={() => navigateTabs('myFeedbacks')}
         />
 
         <Button

@@ -5,12 +5,12 @@ import {
 import { House, SignOut, Chats } from 'phosphor-react-native';
 import { useTheme, Pressable } from 'native-base';
 import { Home } from '@screens/Home';
-import { MyAds } from '@screens/MyAds';
+import { MyFeedbacks } from '@screens/MyFeedbacks';
 import { useAuth } from '@hooks/useAuth';
 
 type HomeTabsRoutes = {
   home: undefined;
-  myAds: undefined;
+  myFeedbacks: undefined;
   signOut: undefined;
 };
 
@@ -58,8 +58,8 @@ export function HomeTabsRoutes() {
       />
 
       <Screen
-        name='myAds'
-        component={MyAds}
+        name='myFeedbacks'
+        component={MyFeedbacks}
         options={() => ({
           tabBarIcon: ({ color, focused }) => (
             <Chats

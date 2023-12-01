@@ -1,4 +1,4 @@
-import { Ads } from '@components/Professionals';
+import { Feedbacks } from '@components/Feedbacks';
 import { useAuth } from '@hooks/useAuth';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
@@ -13,14 +13,19 @@ import {
   Menu,
   HamburgerIcon,
   FlatList,
+  Divider,
 } from 'native-base';
 import { CaretDown, CaretUp, Plus } from 'phosphor-react-native';
 import { useCallback, useEffect, useState } from 'react';
-import { IFeedback } from 'src/interfaces/IFeedback';
+import { feedbackTypes } from '../data/feedbackTypes';
+import { IFeedback } from '../interfaces/IFeedback';
+import { Dimensions } from 'react-native';
 
-export function MyAds() {
+const { width } = Dimensions.get('screen');
+
+export function MyFeedbacks() {
   const { colors, sizes } = useTheme();
-  const { userProducts } = useAuth();
+  const { userFeedbacks } = useAuth();
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
 
   const [filter, setFilter] = useState('Todos');
@@ -33,15 +38,15 @@ export function MyAds() {
 
   useEffect(() => {
     if (filter === 'Todos') {
-      setData(userProducts);
+      setData(userFeedbacks);
+      return;
     }
-    if (filter === 'Ativos') {
-      setData(userProducts.filter((product) => product.is_active === true));
-    }
-    if (filter === 'Inativos') {
-      setData(userProducts.filter((product) => product.is_active === false));
-    }
-  }, [filter, userProducts]);
+
+    setData(userFeedbacks.filter((feedback) => feedback.tipo === filter))
+    
+    console.log(filter, data)
+
+  }, [filter, userFeedbacks]);
 
   return (
     <VStack flex={1} px='6' safeAreaTop>
@@ -57,7 +62,7 @@ export function MyAds() {
 
       <HStack justifyContent='space-between' alignItems='center'>
         <Text fontFamily='regular' fontSize='sm' color='gray.600'>
-          {userProducts?.length} anúncio{userProducts?.length > 1 && 's'}
+          {userFeedbacks?.length} feedback{userFeedbacks?.length > 1 && 's'}
         </Text>
 
         <Menu
@@ -65,7 +70,7 @@ export function MyAds() {
           trigger={(triggerProps) => {
             return (
               <Pressable
-                accessibilityLabel='More options menu'
+                accessibilityLabel='Mais opções de menu'
                 flexDirection='row'
                 borderRadius={6}
                 borderWidth={1}
@@ -74,7 +79,7 @@ export function MyAds() {
                 justifyContent='space-between'
                 px='3'
                 py='2'
-                w={111}
+                w={150}
                 {...triggerProps}
               >
                 <Text fontFamily='regular' fontSize='sm' color='gray.700'>
@@ -94,8 +99,24 @@ export function MyAds() {
           bgColor='white'
           mt='1'
         >
+          {feedbackTypes.map((type) => {
+            return(
+              <Menu.Item
+                w={150}
+                onPress={() => setFilter(type.value)}
+                _text={{
+                  fontFamily: filter === type.value ? 'bold' : 'regular',
+                  fontSize: 'sm',
+                  color: 'gray.600',
+                }}
+              >
+                {type.label}
+              </Menu.Item>
+            );
+          })}
           <Menu.Item
             onPress={() => setFilter('Todos')}
+              w={150}
             _text={{
               fontFamily: filter === 'Todos' ? 'bold' : 'regular',
               fontSize: 'sm',
@@ -104,43 +125,27 @@ export function MyAds() {
           >
             Todos
           </Menu.Item>
-          <Menu.Item
-            onPress={() => setFilter('Ativos')}
-            _text={{
-              fontFamily: filter === 'Ativos' ? 'bold' : 'regular',
-              fontSize: 'sm',
-              color: 'gray.600',
-            }}
-          >
-            Ativos
-          </Menu.Item>
-          <Menu.Item
-            onPress={() => setFilter('Inativos')}
-            _text={{
-              fontFamily: filter === 'Inativos' ? 'bold' : 'regular',
-              fontSize: 'sm',
-              color: 'gray.600',
-            }}
-          >
-            Inativos
-          </Menu.Item>
         </Menu>
       </HStack>
 
       <FlatList
-        data={data}
-        keyExtractor={(item) => String(item)}
-        renderItem={({ item }) => <Ads showAvatar={false} {...item} />}
-        horizontal={false}
-        numColumns={2}
-        style={{
-          marginTop: 15,
-        }}
-        columnWrapperStyle={{
-          justifyContent: 'space-between',
-        }}
-        showsVerticalScrollIndicator={false}
-      />
+          data={data}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item, index }) => <Feedbacks {...item} isFirst={index == 0} />}
+          mt={7}  
+          ListEmptyComponent={
+            <Text
+              color='gray.500'
+              fontSize='sm'
+              fontFamily='regular'
+              mt='6'
+              mb='2'
+            >
+              Nenhum feedback encontrado!
+            </Text>
+          }
+        />
+
     </VStack>
   );
 }

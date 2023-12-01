@@ -62,6 +62,10 @@ public class FeedbackService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,  "(" + getClass().getSimpleName() + ") - Feedback não encontrada por ID: " + id));
     }
 
+    public Page<Feedback> listByPacienteId(Long usuarioId, Pageable pageRequest) {
+        return feedbackRepository.findByPacienteId(usuarioId, pageRequest);
+    }
+
     // private FeedbackDTO convertToDto(Feedback entity) {
     //     FeedbackDTO dto = new FeedbackDTO();
     //     dto.setId(entity.getId());

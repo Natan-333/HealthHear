@@ -24,9 +24,11 @@ const PHOTO_SIZE = 55;
 const CARD_WIDTH = width - 55;
 const BOX_TEXT_WIDTH = CARD_WIDTH - PHOTO_SIZE - GAP;
 
+type Props = IFeedback & {
+    isFirst: boolean;
+};
 
 export function Feedbacks({
-    id,
     data,
     titulo,
     descricao,
@@ -34,9 +36,7 @@ export function Feedbacks({
     paciente,
     registro,
     isAnonimo,
-    acao,
-    imagem,
-    tipo }: IFeedback) {
+    isFirst }: Props) {
 
     const { navigate } = useNavigation<AppNavigatorRoutesProps>();
 
@@ -52,7 +52,7 @@ export function Feedbacks({
         <Pressable onPress={handleNavigateToFeedbackDetails}>
             <VStack>
                 <VStack>
-                    <Divider w={CARD_WIDTH - 50} mx={'auto'} />
+                    {!isFirst && (<Divider w={CARD_WIDTH - 50} mx={'auto'} />)}
                     <Pressable
                         py='4'
                         width={CARD_WIDTH}
@@ -123,9 +123,15 @@ export function Feedbacks({
                                     <Star size={20} weight="fill" color={colors.yellow[500]} />
                                 </Box>
 
-                                <Text fontSize='sm' fontFamily='bold' color='gray.600' mb={0}>
-                                    {formatDocument(registro.numero, registro.uf, registro.tipoRegistro)}
-                                </Text>
+                                <Box display={'flex'} flexDir={'row'} style={{ gap: 3 }}>
+                                    <Text fontSize='sm' fontFamily='regular' color='gray.600' mb={0}>
+                                        sobre
+                                    </Text>
+
+                                    <Text fontSize='sm' fontFamily='bold' color='gray.600' mb={0}>
+                                        {formatDocument(registro.numero, registro.uf, registro.tipoRegistro)}
+                                    </Text>
+                                </Box>
                             </Box>
                         </Box>
 

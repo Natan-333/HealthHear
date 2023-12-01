@@ -54,8 +54,8 @@ export function AdDetails() {
   const [isLoading, setIsLoading] = useState(true);
 
   function handleGoBack() {
-    if (user.id === data?.user_id) {
-      navigateHomeTabs('myAds');
+    if (user.id === data?.id) {
+      navigateHomeTabs('myFeedbacks');
     } else {
       goBack();
     }

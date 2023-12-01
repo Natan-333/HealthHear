@@ -112,4 +112,16 @@ public class RegistroService {
         entity.setEspecialidades(newEspecialidades);
         return entity;
     }
+
+    public Registro findOrCreate(String numero, String uf, String tipoRegistro) {
+        return registroRepository.findByNumeroAndUfAndTipoRegistro(numero, uf, tipoRegistro)
+                .orElseGet(() -> {
+                    Registro novoRegistro = new Registro();
+                    novoRegistro.setNumero(numero);
+                    novoRegistro.setUf(uf);
+                    novoRegistro.setTipoRegistro(tipoRegistro);
+                    return registroRepository.save(novoRegistro);
+                });
+    }
+    
 }

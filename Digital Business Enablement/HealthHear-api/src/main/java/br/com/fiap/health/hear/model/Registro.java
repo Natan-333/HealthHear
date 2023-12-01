@@ -15,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "REGISTRO")
+@Table(name = "REGISTRO", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_REGISTRO_UNICO", columnNames = {"NUMERO_REGISTRO", "UF_REGISTRO", "TIPO_REGISTRO"})
+})
 public class Registro {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SQ_REGISTRO")

@@ -107,8 +107,14 @@ Siga as instruções abaixo para gerar o arquivo JAR a partir do código-fonte e
 
 1. Clone o repositório ou baixe o código-fonte do projeto para o seu computador.
 2. Navegue até a raiz do projeto, onde o arquivo `pom.xml` está localizado.
-3. Abra o terminal ou prompt de comando nesta localização.
-4. Execute o seguinte comando para compilar o projeto e gerar o arquivo JAR:
+3. Nesta pasta você encontrará o arquivo applicattion.properties.
+4. Caso queira testar com o banco H2, deixe a linha spring.profiles.active=${PROFILE:dev}, caso deseje testar com o banco Oracle, deixa a linha spring.profiles.active=${PROFILE:prod}
+5. Caso escolha o Oracle, adicionar as variáveis de ambiente em sua máquina, sendo que os campos e valores são:
+   5.1. DB_URL: url do banco oracle
+   5.2. DB_USER: usuario do banco oracle
+   5.3. DB_PASS: senha do banco oracle
+7. Abra o terminal ou prompt de comando nesta mesma localização (onde contém o pom.xml).
+8. Execute o seguinte comando para compilar o projeto e gerar o arquivo JAR:
    
 ```bash
 $ mvn clean package
@@ -116,14 +122,14 @@ $ mvn clean package
 
 Este comando irá limpar o projeto (remove arquivos compilados anteriores), compila o código-fonte e empacota o resultado em um arquivo JAR dentro do diretório `target`.
 
-5. Após a conclusão do processo, você encontrará o arquivo JAR gerado no diretório `target`.
+9. Após a conclusão do processo, você encontrará o arquivo JAR gerado no diretório `target`.
 
 Executando o Arquivo JAR
-6. Navegue até o diretório `target` que contém o novo arquivo JAR.
-7. Execute o arquivo JAR usando o comando:
+10. Navegue até o diretório `target` que contém o novo arquivo JAR.
+11. Execute o arquivo JAR usando o comando:
 
 ```bash
-$ java -jar nome-do-seu-arquivo.jar
+$ java -jar health.hear-0.0.1-SNAPSHOT.jar
 ```
 
 Solução de Problemas:
@@ -176,53 +182,6 @@ $ yarn start
   <p align="center">
     <img src="Database Applicattion Development/DER.png" alt="DER">
   </p>
-
-  ### Tabelas e Relacionamentos
-
-  #### `Usuario`
-  - **Descrição**: Armazena informações dos usuários do sistema.
-  - **Chave Primária**: `id_usuario`
-  - **Atributos**: `email_usuario`, `senha_usuario`, `nome_usuario`, `cpf_usuario`, `imagem_usuario`
-  - **Restrições**: `email_usuario` e `cpf_usuario` devem ser únicos e não nulos; `senha_usuario` e `nome_usuario` não podem ser nulos.
-  
-  #### `Registro`
-  - **Descrição**: Registra os dados do registro de profissionais de saúde.
-  - **Chave Primária**: `id_registro`
-  - **Atributos**: `numero_registro`, `uf_registro`, `tipo_registro`, `id_usuario`
-  - **Relacionamentos**: Relacionado com `Usuario` pela chave `id_usuario`.
-  - **Restrições**: A combinação de `numero_registro`, `uf_registro`, `tipo_registro` deve ser única.
-  
-  #### `Feedback`
-  - **Descrição**: Armazena feedbacks de usuários sobre serviços ou experiências.
-  - **Chave Primária**: `id_feedback`
-  - **Atributos**: `data_feedback`, `titulo_feedback`, `descricao_feedback`, `nota_feedback`, `id_paciente`, `id_registro`, `is_anonimo`, `acao_tomada_feedback`, `evidencia_feedback`, `tipo_feedback`
-  - **Relacionamentos**: 
-    - Relacionado com `Usuario` pela chave `id_paciente`.
-    - Relacionado com `Registro` pela chave `id_registro`.
-  - **Restrições**: `data_feedback`, `titulo_feedback`, `descricao_feedback`, `nota_feedback`, `id_paciente`, `id_registro`, `is_anonimo` e `tipo_feedback` não podem ser nulos.
-  
-  #### `Especialidade`
-  - **Descrição**: Categorias de especialização dos profissionais de saúde.
-  - **Chave Primária**: `id_especialidade`
-  - **Atributos**: `nome_especialidade`
-  - **Restrições**: `nome_especialidade` deve ser único e não nulo.
-  
-  #### `Registro_Especialidade`
-  - **Descrição**: Associa registros de profissionais a suas respectivas especialidades médicas.
-  - **Chaves Estrangeiras**: `id_registro`, `id_especialidade`
-  - **Relacionamentos**: 
-    - `id_registro` referencia `Registro`.
-    - `id_especialidade` referencia `Especialidade`.
-  - **Restrições**: A combinação de `id_registro` e `id_especialidade` deve ser única.
-  
-  #### `Resposta`
-  - **Descrição**: Armazena respostas aos feedbacks dados pelos usuários.
-  - **Chave Primária**: `id_resposta`
-  - **Atributos**: `data_resposta`, `descricao_resposta`, `id_usuario`, `id_feedback`
-  - **Relacionamentos**: 
-    - Relacionado com `Usuario` pela chave `id_usuario`.
-    - Relacionado com `Feedback` pela chave `id_feedback`.
-  - **Restrições**: `data_resposta`, `descricao_resposta`, `id_usuario`, `id_feedback` não podem ser nulos.
   </details>
 
   <details>

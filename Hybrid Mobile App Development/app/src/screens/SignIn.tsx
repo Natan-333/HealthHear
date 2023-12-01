@@ -37,7 +37,6 @@ import { useAuth } from '@hooks/useAuth';
 import { Input } from '@components/Input';
 import { Button } from '@components/Button';
 
-
 export function SignIn() {
   // Hook
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
@@ -59,18 +58,10 @@ export function SignIn() {
       setIsLoading(true);
       await signIn(email, password);
     } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError
-        ? error.message
-        : 'Não foi possível entrar. Tente novamente mais tarde.';
-
+      const title = "Não foi possível realizar login";
+      toast.show({ title, placement: 'top', bgColor: 'red.500' });
+    } finally {
       setIsLoading(false);
-
-      toast.show({
-        title,
-        placement: 'top',
-        bgColor: 'red.500',
-      });
     }
   }
 

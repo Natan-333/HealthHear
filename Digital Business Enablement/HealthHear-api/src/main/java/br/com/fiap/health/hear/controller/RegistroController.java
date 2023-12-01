@@ -57,4 +57,10 @@ public class RegistroController {
         registroService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/findOrCreate")
+    public ResponseEntity<Registro> buscarOuCriar(@RequestBody RegistroDTO registroDTO) {
+        Registro registro = registroService.findOrCreate(registroDTO.getNumero(), registroDTO.getUf(), registroDTO.getTipoRegistro());
+        return ResponseEntity.ok(registro);
+    }
 }

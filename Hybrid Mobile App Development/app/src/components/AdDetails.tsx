@@ -9,7 +9,7 @@ import {
   Money,
   QrCode,
 } from 'phosphor-react-native';
-import { IProduct } from 'src/interfaces/IProduct';
+import { IFeedback } from 'src/interfaces/IFeedback';
 import { toMaskedPrice } from '@utils/Masks';
 import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 
@@ -25,7 +25,7 @@ export function AdDetails({
   payment_methods,
   price,
   is_active = true,
-}: IProduct) {
+}: IFeedback) {
   const { colors, sizes } = useTheme();
 
   function paymentMethodIndicator(paymentMethod: IPaymentMethods) {

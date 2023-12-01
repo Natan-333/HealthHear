@@ -8,7 +8,7 @@ import { AdDetails } from '@components/AdDetails';
 import { useState } from 'react';
 import { AppError } from '@utils/AppError';
 import { IPhoto } from 'src/interfaces/IPhoto';
-import { IProduct } from 'src/interfaces/IProduct';
+import { IFeedback } from 'src/interfaces/IFeedback';
 import { useAuth } from '@hooks/useAuth';
 
 export function PreviewAd() {
@@ -18,7 +18,7 @@ export function PreviewAd() {
   const toast = useToast();
   const { fetchUserProducts } = useAuth();
 
-  const params = route.params as IProduct & { imagesToDelete: string[] };
+  const params = route.params as IFeedback & { imagesToDelete: string[] };
 
   const [isLoading, setIsLoading] = useState(false);
 

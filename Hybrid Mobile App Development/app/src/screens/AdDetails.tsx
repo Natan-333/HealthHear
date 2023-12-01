@@ -24,7 +24,7 @@ import { api } from '@services/api';
 import { AdDetails as AdDetailsComponent } from '@components/AdDetails';
 import { AppError } from '@utils/AppError';
 import { useCallback, useEffect, useState } from 'react';
-import { IProduct } from 'src/interfaces/IProduct';
+import { IFeedback } from 'src/interfaces/IFeedback';
 import { ProductMap } from '@mappers/ProductMap';
 import { Loading } from '@components/Loading';
 import { HomeTabsNavigatorRoutesProps } from '@routes/home.tabs.routes';
@@ -49,7 +49,7 @@ export function AdDetails() {
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [data, setData] = useState<IProduct>({} as IProduct);
+  const [data, setData] = useState<IFeedback>({} as IFeedback);
   const [is_active, setIs_active] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -136,7 +136,7 @@ export function AdDetails() {
 
       const { data } = await api.get(`/products/${params.id}`);
 
-      setData(ProductMap.toIProduct(data));
+      setData(ProductMap.toIFeedback(data));
       setIs_active(data.is_active);
     } catch (error) {
       const isAppError = error instanceof AppError;

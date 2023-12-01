@@ -29,7 +29,6 @@ import { useAuth } from '@hooks/useAuth';
 import { IPhoto } from 'src/interfaces/IPhoto';
 import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 import { HomeTabsNavigatorRoutesProps } from '@routes/home.tabs.routes';
-import { IProduct } from 'src/interfaces/IProduct';
 import { api } from '@services/api';
 
 // Component import

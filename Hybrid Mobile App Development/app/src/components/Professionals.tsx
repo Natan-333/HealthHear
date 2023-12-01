@@ -55,11 +55,11 @@ export function Professionals({
             <Box style={{position: 'relative'}}>
               <UserPhoto
                 source={
-                  !usuario.imagem
+                  !usuario?.imagem
                     ? defaultUserPhotoImg
                     : { uri: usuario.imagem }
                 }
-                alt={`Imagem de ${usuario.nome}`}
+                alt={`Imagem de ${usuario?.nome}`}
                 size={PHOTO_SIZE}
               />
 
@@ -81,12 +81,12 @@ export function Professionals({
             </Box>
             
             <Text fontSize='lg' fontFamily='bold' color='gray.900' noOfLines={1} mt={2}>
-              {usuario.nome}
+              {usuario?.nome}
             </Text>
 
             {especialidades.length > 0 && (
               <Text fontSize='md' fontFamily='regular' color='gray.600'>
-                {especialidades[0].nome}
+                {especialidades[0]?.nome}
               </Text>
             )}
 

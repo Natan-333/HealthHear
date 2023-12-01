@@ -1,5 +1,5 @@
 import { CreateFeedback } from '@screens/CreateFeedback';
-import { PreviewAd } from '@screens/PreviewAd';
+import { PreviewFeedback } from '@screens/PreviewFeedback';
 import { AdDetails } from '@screens/AdDetails';
 import { IFeedback } from 'src/interfaces/IFeedback';
 import {
@@ -11,7 +11,7 @@ import { HomeTabsRoutes } from './home.tabs.routes';
 type AppRoutes = {
   homeTabs: undefined;
   CreateFeedback: undefined | IFeedback;
-  previewAd: IFeedback & { imagesToDelete: string[] };
+  previewFeedback: IFeedback;
   adDetails: { id: string };
 };
 
@@ -24,7 +24,7 @@ export function AppRoutes() {
     <Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
       <Screen name='homeTabs' component={HomeTabsRoutes} />
       <Screen name='CreateFeedback' component={CreateFeedback} />
-      <Screen name='previewAd' component={PreviewAd} />
+      <Screen name='previewFeedback' component={PreviewFeedback} />
       <Screen name='adDetails' component={AdDetails} />
     </Navigator>
   );

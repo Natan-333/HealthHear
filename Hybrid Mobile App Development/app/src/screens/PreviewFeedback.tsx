@@ -4,19 +4,18 @@ import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { HStack, Text, VStack, useTheme, useToast } from 'native-base';
 import { ArrowLeft, Tag } from 'phosphor-react-native';
 import { api } from '@services/api';
-import { AdDetails } from '@components/AdDetails';
 import { useState } from 'react';
 import { AppError } from '@utils/AppError';
-import { IPhoto } from 'src/interfaces/IPhoto';
 import { IFeedback } from 'src/interfaces/IFeedback';
 import { useAuth } from '@hooks/useAuth';
+import { Feedbacks } from '@components/Feedbacks';
 
-export function PreviewAd() {
+export function PreviewFeedback() {
   const { colors, sizes } = useTheme();
   const { navigate, goBack } = useNavigation<AppNavigatorRoutesProps>();
   const route = useRoute();
   const toast = useToast();
-  const { fetchUserProducts } = useAuth();
+  const { fetchUserFeedback } = useAuth();
 
   const params = route.params as IFeedback & { imagesToDelete: string[] };
 
@@ -28,38 +27,41 @@ export function PreviewAd() {
 
   async function handlePublish() {
     try {
+      console.log(params)
       setIsLoading(true);
 
-      const { data } = await api.post('/products', {
-        name: params.name,
-        description: params.description,
-        is_new: params.is_new,
-        price: Number(params.price.toFixed(0)),
-        accept_trade: params.accept_trade,
-        payment_methods: params.payment_methods,
+      const { data } = await api.post('/registros/findOrCreate', {
+        id: null,
+        numero: params.registro.numero,
+        uf: params.registro.uf,
+        tipoRegistro: params.registro.tipoRegistro,
+        idUsuario: params.registro.usuario?.id,
+        especialidades: [],
       });
 
-      const formData = new FormData();
-      formData.append('product_id', data.id);
+      console.log(data)
 
-      params.product_images.map((photo) => {
-        formData.append('images', photo as any);
-      });
+      // const formData = new FormData();
+      // formData.append('product_id', data.id);
 
-      await api.post('/products/images', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // params.product_images.map((photo) => {
+      //   formData.append('images', photo as any);
+      // });
 
-      await fetchUserProducts();
+      // await api.post('/products/images', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
 
-      navigate('adDetails', { id: data.id });
+      await fetchUserFeedback();
+
+      navigate('homeTabs');
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
         ? error.message
-        : 'Não foi possível cadastrar o seu produto. Tente novamente mais tarde.';
+        : 'Não foi possível cadastrar o seu feedback. Tente novamente mais tarde.';
 
       toast.show({
         title,
@@ -80,41 +82,41 @@ export function PreviewAd() {
         });
       }
 
-      await api.put(`/products/${params.id}`, {
-        name: params.name,
-        description: params.description,
-        is_new: params.is_new,
-        price: Number(params.price.toFixed(0)),
-        accept_trade: params.accept_trade,
-        payment_methods: params.payment_methods,
-      });
+      // await api.put(`/products/${params.id}`, {
+      //   name: params.name,
+      //   description: params.description,
+      //   is_new: params.is_new,
+      //   price: Number(params.price.toFixed(0)),
+      //   accept_trade: params.accept_trade,
+      //   payment_methods: params.payment_methods,
+      // });
 
-      let imagesToUpload = [] as IPhoto[];
-      params.product_images.map((photo) => {
-        if (!photo.uri.match(`${api.defaults.baseURL}/images/`)) {
-          imagesToUpload = [...imagesToUpload, photo];
-        }
-      });
+      // let imagesToUpload = [] as IPhoto[];
+      // params.product_images.map((photo) => {
+      //   if (!photo.uri.match(`${api.defaults.baseURL}/images/`)) {
+      //     imagesToUpload = [...imagesToUpload, photo];
+      //   }
+      // });
 
-      if (imagesToUpload.length > 0) {
-        const formData = new FormData();
-        formData.append('product_id', params.id as string);
+      // if (imagesToUpload.length > 0) {
+      //   const formData = new FormData();
+      //   formData.append('product_id', params.id as string);
 
-        imagesToUpload.map((photo) => {
-          if (!photo.uri.match(`${api.defaults.baseURL}/images/`)) {
-            formData.append('images', photo as any);
-          }
-        });
+      //   imagesToUpload.map((photo) => {
+      //     if (!photo.uri.match(`${api.defaults.baseURL}/images/`)) {
+      //       formData.append('images', photo as any);
+      //     }
+      //   });
 
-        await api.post('/products/images', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-      }
+      //   await api.post('/products/images', formData, {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   });
+      // }
 
-      await fetchUserProducts();
-      navigate('adDetails', { id: params.id as string });
+      await fetchUserFeedback();
+      navigate('homeTabs');
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -135,14 +137,14 @@ export function PreviewAd() {
     <VStack flex={1}>
       <VStack safeAreaTop bg='blue.400' alignItems='center' p='4'>
         <Text fontFamily='bold' fontSize='md' color='gray.100'>
-          Pré visualização do anúncio
+          Pré visualização do feedback
         </Text>
         <Text fontFamily='regular' fontSize='sm' color='gray.100'>
-          É assim que seu produto vai aparecer!
+          É assim que seu feedback vai aparecer!
         </Text>
       </VStack>
 
-      <AdDetails {...params} />
+      <Feedbacks {...params} />
 
       <HStack w='full' safeAreaBottom bg='white' p='3' px='6'>
         <Button

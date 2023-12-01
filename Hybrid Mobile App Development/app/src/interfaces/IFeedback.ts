@@ -2,8 +2,8 @@ import { IDocument } from './IDocument';
 import { IUser } from './IUser';
 
 export interface IFeedback {
-  id: number;
-  data: string;
+  id: number | null;
+  data: string | Date;
   titulo: string;
   descricao: string;
   nota: number;

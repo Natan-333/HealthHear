@@ -1,13 +1,8 @@
 import { Button } from '@components/Button';
-import { Checkbox } from '@components/Checkbox';
 import { Input } from '@components/Input';
-import { Radio } from '@components/Radio';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
-import { maskedPriceToNumber, toMaskedPrice } from '@utils/Masks';
 import {
-  Center,
-  FlatList,
   HStack,
   IToastProps,
   Pressable,
@@ -19,17 +14,14 @@ import {
   useTheme,
   useToast,
 } from 'native-base';
-import { ArrowLeft, Plus, X } from 'phosphor-react-native';
+import { ArrowLeft } from 'phosphor-react-native';
 import { useEffect, useState } from 'react';
 import uuid from 'react-native-uuid';
 import * as ImagePicker from 'expo-image-picker';
 import { AppError } from '@utils/AppError';
-import { ProductSmallPhoto } from '@components/ProductSmallPhoto';
 import { useAuth } from '@hooks/useAuth';
 import { IPhoto } from 'src/interfaces/IPhoto';
-import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 import { HomeTabsNavigatorRoutesProps } from '@routes/home.tabs.routes';
-import { api } from '@services/api';
 
 // Component import
 import {
@@ -64,18 +56,18 @@ export function CreateFeedback() {
 
   // State
   const [tipo, setTipo] = useState('elogio');
-  const [image, setImage] = useState<IPhoto | null>(null);
+  const [imagem, setImagem] = useState<IPhoto | null>(null);
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [acao, setAcao] = useState('');
-  const [acceptTrade, setAcceptTrade] = useState(false);
-  const [paymentMethods, setPaymentMethods] = useState<IPaymentMethods[]>([]);
   const [headerTitle, setHeaderTitle] = useState('Criar feedback');
   const [tipoRegistro, setTipoRegistro] = useState('CRM');
   const [registro, setRegistro] = useState('');
   const [UF, setUF] = useState('SP');
   const [nota, setNota] = useState(0);
   const [anonimo, setAnonimo] = useState(false)
+
+  const data = new Date();
 
   async function handlePhotoSelect() {
     try {
@@ -97,7 +89,7 @@ export function CreateFeedback() {
           type: `${photoSelected.assets[0].type}/${fileExtension}`,
         } as any;
 
-        return setImage(photoFile);
+        return setImagem(photoFile);
       }
     } catch (error) {
       const isAppError = error instanceof AppError;
@@ -112,33 +104,15 @@ export function CreateFeedback() {
     } 
   }
 
-  function handleRemovePhoto(photo: IPhoto) {
-    setImage(null);
+  function handleRemovePhoto() {
+    setImagem(null);
   }
 
-  function findPaymentMethod(payment_method: IPaymentMethods) {
-    return paymentMethods.includes(payment_method);
-  }
-
-  function handlePaymentMethods(payment_method: IPaymentMethods) {
-    const existMethod = findPaymentMethod(payment_method);
-
-    if (existMethod)
-      return setPaymentMethods(prev => prev.filter((item) =>
-        item !== payment_method)
-      );
-
-    return setPaymentMethods((prev) => [...prev, payment_method]);
-  }
-
-  function handleNavigateToAdPreview() {
+  function handleNavigateToFeedbackPreview() {
     const defaultToastProps: IToastProps = {
       placement: "top",
       bgColor: 'red.500'
     }
-
-    if (image == null)
-      return toast.show({ ...defaultToastProps, title: 'Adicione uma foto.' });
 
     if (titulo.trim() === '')
       return toast.show({ ...defaultToastProps, title: 'Informe o título.' });
@@ -146,42 +120,53 @@ export function CreateFeedback() {
     if (descricao.trim() === '')
       return toast.show({ ...defaultToastProps, title: 'Informe a descrição' });
 
-    if (paymentMethods.length <= 0) {
-      return toast.show({
-        title: 'Informe ao menos um método de pagamento.',
-        placement: 'top',
-        bgColor: 'red.500',
-      });
-    }
+    if (registro.trim() === '')
+    return toast.show({ ...defaultToastProps, title: `Informe o ${tipoRegistro}` });
 
-    // navigate('previewAd', {
-    //   user,
-    //   product_images: image,
-    //   name,
-    //   description,
-    //   is_new: isNew === 'Produto novo',
-    //   price: rawPrice,
-    //   accept_trade: acceptTrade,
-    //   payment_methods: paymentMethods,
-    //   imagesToDelete: imagesToDelete,
-    //   id: params?.id,
-    //   is_active: isActive,
-    // });
+    if (UF.trim() === '')
+    return toast.show({ ...defaultToastProps, title: 'Informe a UF' });
+
+    navigate('previewFeedback', {
+      id: null,
+      data,
+      titulo,
+      descricao,
+      nota,
+      paciente: {
+        id: 1,
+        nome: "Vitor",
+        email: "vitorrrrr@hotmail.com",
+        cpf: "11111111111",
+        imagem: "imagem teste",
+      },
+      registro: {
+        id: null,
+        numero: registro,
+        tipoRegistro,
+        uf: UF,
+        usuario: null,
+        especialidades: []
+      },
+      isAnonimo: anonimo,
+      acao,
+      imagem: imagem?.uri,
+      tipo
+    });
   }
 
   useEffect(() => {
-    // if (params) {
-    //   setImage(params.evidencia);
-    //   setName(params.name);
-    //   setDescription(params.description);
-    //   setIsNew(params.is_new ? 'Produto novo' : 'Produto usado');
-    //   setPrice(toMaskedPrice(String(params.price)));
-    //   setAcceptTrade(params.accept_trade);
-    //   setPaymentMethods(params.payment_methods);
-    //   setIsActive(params?.is_active ?? true);
-    //   setImagesToDelete([]);
-    //   setHeaderTitle('Editar anúncio');
-    // }
+    if (params) {
+      setTipo(params.tipo || tipo);
+      // setImagem(params.imagem || imagem);
+      setTitulo(params.titulo);
+      setDescricao(params.descricao );
+      setAcao(params.acao || acao);
+      setTipoRegistro(params.registro.tipoRegistro);
+      setRegistro(params.registro.numero || registro);
+      setUF(params.registro.uf || UF);
+      setNota(params.nota || nota);
+      setAnonimo(params.isAnonimo !== undefined ? params.isAnonimo : anonimo);
+    }
   }, [params]);
 
   return (
@@ -264,9 +249,9 @@ export function CreateFeedback() {
           Selecione uma imagem para dar mais credibilidade a sua crítica, denúncia ou elogio.
         </Text>
 
-        {image
+        {imagem
           ?
-          (<FeedbackImage image={image} handleRemovePhoto={handleRemovePhoto} />)
+          (<FeedbackImage image={imagem} handleRemovePhoto={handleRemovePhoto} />)
           :
           (<FeedbackImageUpload onPress={handlePhotoSelect} />)
         }
@@ -344,7 +329,7 @@ export function CreateFeedback() {
           flex={1}
           bgColor='gray.700'
           marginLeft={2}
-          onPress={handleNavigateToAdPreview}
+          onPress={handleNavigateToFeedbackPreview}
         />
       </HStack>
     </VStack>

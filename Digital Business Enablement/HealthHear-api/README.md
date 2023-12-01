@@ -127,6 +127,10 @@ Atualiza um usuario.
 
 Deleta um usuario.
 
+#### `GET /usuarios/feedbacks/{id}`
+
+Lista todos os feedbacks de um usuario.
+
 ---
 
 ---
@@ -246,6 +250,26 @@ Atualiza um registro.
 #### `DELETE /registros/{id}`
 
 Deleta um registro.
+
+#### `GET /registros/feedbacks/{id}`
+
+Lista todos os feedbacks de registro.
+
+#### `POST /registros/findOrCreate`
+
+Busca ou cria um registro.
+
+**Exemplo do body da requisição:**
+```json
+{
+	  "numero": "123456",
+	  "uf": "SP",
+	  "tipoRegistro": "CRM"
+}
+
+```
+
+
 
 ---
 

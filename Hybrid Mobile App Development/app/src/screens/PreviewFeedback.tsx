@@ -25,39 +25,60 @@ export function PreviewFeedback() {
     goBack();
   }
 
+  async function createDocument(){
+    setIsLoading(true);
+
+    const { data: registro } = await api.post('/registros/findOrCreate', {
+      numero: params.registro.numero,
+      uf: params.registro.uf,
+      tipoRegistro: params.registro.tipoRegistro,
+      idUsuario: params.registro.usuario?.id,
+      idEspecialidades: [],
+    });
+
+    console.log('Criando registro: ', registro)
+
+    return registro;
+  }
+
+  async function createFeedback(idRegistro: number){
+    setIsLoading(true);
+
+    if(!idRegistro) return null;
+
+    const { data: feedback } = await api.post('/feedbacks', {
+      titulo: params.titulo,
+      descricao: params.descricao,
+      data: params.data,
+      nota: params.nota,
+      idPaciente: params.paciente.id,
+      idRegistro,
+      isAnonimo: params.isAnonimo,
+      acao: params.acao,
+      imagem: params.imagem,
+      tipo: params.tipo,
+    });
+
+    console.log('Criando feedback', feedback);
+
+    return feedback;
+  }
+
   async function handlePublish() {
     try {
-      console.log(params)
-      setIsLoading(true);
-
-      const { data } = await api.post('/registros/findOrCreate', {
-        id: null,
-        numero: params.registro.numero,
-        uf: params.registro.uf,
-        tipoRegistro: params.registro.tipoRegistro,
-        idUsuario: params.registro.usuario?.id,
-        especialidades: [],
-      });
-
-      console.log(data)
-
-      // const formData = new FormData();
-      // formData.append('product_id', data.id);
-
-      // params.product_images.map((photo) => {
-      //   formData.append('images', photo as any);
-      // });
-
-      // await api.post('/products/images', formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // });
-
+      const responseRegistro = await createDocument();
+      console.log('Response registro: ', responseRegistro);
+  
+      if (responseRegistro) await createFeedback(responseRegistro.id);
+  
       await fetchUserFeedback();
-
       navigate('homeTabs');
+
     } catch (error) {
+
+      // BUG: mesmo quando ambos sao criados (registro e feedback), ele cai nesse catch com um statuscode 404.
+      console.error('Erro no handlePublish:', error)
+
       const isAppError = error instanceof AppError;
       const title = isAppError
         ? error.message
@@ -68,6 +89,7 @@ export function PreviewFeedback() {
         placement: 'top',
         bgColor: 'red.500',
       });
+
     } finally {
       setIsLoading(false);
     }

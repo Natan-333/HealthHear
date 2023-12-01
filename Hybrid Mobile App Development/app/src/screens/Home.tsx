@@ -42,22 +42,26 @@ import { IFeedback } from 'src/interfaces/IFeedback';
 import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 import { Loading } from '@components/Loading';
 import { Feedbacks } from '@components/Feedbacks';
+import { IDocument } from 'src/interfaces/IDocument';
+import defaultUserPhotoImg from '@assets/userPhotoDefault.png';
+import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
 
 const PHOTO_SIZE = 12;
 const { height } = Dimensions.get('screen');
 
 export function Home() {
   const { colors, sizes } = useTheme();
-  const { user, updateUserProfile } =
-    useAuth();
+  const { user, updateUserProfile, fetchUserFeedback, userFeedbacks } = useAuth();
   const toast = useToast();
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
   const { navigate: navigateTabs } =
     useNavigation<HomeTabsNavigatorRoutesProps>();
+  const { navigate: navigateAuth } = useNavigation<AuthNavigatorRoutesProps>();
 
   const modalizeRef = useRef<Modalize>(null);
 
-  const [data, setData] = useState<IFeedback[]>([] as IFeedback[]);
+  const [feedbacks, setFeedbacks] = useState<IFeedback[]>([] as IFeedback[]);
+  const [professionals, setProfessionals] = useState<IDocument[]>([] as IDocument[]);
   const [paymentMethods, setPaymentMethods] = useState<IPaymentMethods[]>([]);
   const [acceptTrade, setAcceptTrade] = useState<boolean | null>(null);
   const [isNew, setIsNew] = useState<boolean | null>(null);
@@ -65,87 +69,6 @@ export function Home() {
   const [isFetchLoading, setIsFetchLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
-
-  const professionalsExample = [
-		{
-      "id": 1,
-      "numero": "123456",
-      "tipoRegistro": "CRM",
-      "uf": "SP",
-      "usuario": {
-        "id": 3,
-        "nome": "Stanley Bittar",
-        "email": "stanley@hotmail.com",
-        "cpf": "43101167873",
-        "imagem": "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394"
-      },
-      "especialidades": [
-        {
-          "id": 1,
-          "nome": "Neurologia"
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "numero": "123456",
-      "tipoRegistro": "CRM",
-      "uf": "SP",
-      "usuario": {
-        "id": 3,
-        "nome": "Stanley Bittar",
-        "email": "stanley@hotmail.com",
-        "cpf": "43101167873",
-        "imagem": "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394"
-      },
-      "especialidades": [
-        {
-          "id": 1,
-          "nome": "Neurologia"
-        }
-      ]
-    },
-	]
-
-  const examplesFeedbacks = [
-    {
-      "id": 1,
-      "data": "2023-02-22T00:00:00.000+00:00",
-      "titulo": "Muito bom médico",
-      "descricao": "Foi atencioso durante sua consulta e me atendeu da melhor forma.",
-      "nota": 5,
-      "paciente": {
-        "id": 1,
-        "nome": "Kaue Caponero",
-        "email": "kaue@hotmail.com",
-        "cpf": "43101167876",
-        "imagem": "https://avatars.githubusercontent.com/u/111543330?v=4"
-      },
-      "registro": {
-        "id": 2,
-        "numero": "123456",
-        "tipoRegistro": "CRM",
-        "uf": "SP",
-        "usuario": {
-          "id": 3,
-          "nome": "Stanley Bittar",
-          "email": "stanley@hotmail.com",
-          "cpf": "43101167873",
-          "imagem": "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394"
-        },
-        "especialidades": [
-          {
-            "id": 1,
-            "nome": "Neurologia"
-          }
-        ]
-      },
-      "isAnonimo": false,
-      "acao": null,
-      "imagem": null,
-      "tipo": "elogio"
-    }
-  ]
 
   function handleOpenModalize() {
     modalizeRef.current?.open();
@@ -156,17 +79,20 @@ export function Home() {
   }
 
   function handleOpenCreateFeedback() {
-    navigate('CreateFeedback');
+    // Ajustra lógica
+    // {
+    //   user.id ?
+    //   (navigate('CreateFeedback')) :
+    //   (navigateAuth('signIn'))
+    // };
+    navigate('CreateFeedback')
   }
 
-  function handleNavigateToMyAds() {
-    navigateTabs('myAds');
+  function handleNavigateToFeedbacks() {
+    userFeedbacks.length > 0 ? (
+      navigateTabs('myAds')
+    ) : handleOpenCreateFeedback()
   }
-
-  // function countActiveFeedbacks() {
-  //   let activeAds = userProducts.map((item) => item.is_active === true);
-  //   return activeAds.length;
-  // }
 
   const userProducts = [];
 
@@ -242,8 +168,8 @@ export function Home() {
       setIsFetchLoading(true);
 
       await updateUserProfile();
+      await fetchUserFeedback();
 
-      // await fetchUserProducts();
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -270,39 +196,58 @@ export function Home() {
     fetchFilteredProducts();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const feedbacksData = await api.get('/feedbacks');
+        setFeedbacks(feedbacksData.data.content);
+        console.log(feedbacksData.data.content)
+
+        const registros = await api.get('/registros');
+        // Filtrando pra buscar apenas os registros atrelados a um profissional
+        // setProfessionals(registros.data.content.filter((registro: IDocument) => registro.usuario != null).slice(2));
+        console.log(registros.data.content)
+        setProfessionals(registros.data.content)
+
+        setIsLoading(true)
+
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+      } finally {
+        setIsLoading(false)
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <ScrollView flex={1} px='6' pb={4} mt={10}>
       <HStack w='full' mt='2'>
-        {photoIsLoading ? (
-          <Skeleton
-            w={PHOTO_SIZE}
-            h={PHOTO_SIZE}
-            rounded='full'
-            startColor='gray.500'
-            endColor='gray.400'
-          />
-        ) : (
-          <UserPhoto
-            source={{ uri: user.imagem }}
-            alt='Foto do usuário'
-            borderWidth={2}
-            size={PHOTO_SIZE}
-          />
-        )}
+        <UserPhoto
+          source={
+            !user?.imagem
+              ? defaultUserPhotoImg
+              : { uri: user.imagem }
+          }
+          alt='Foto do usuário'
+          borderWidth={2}
+          size={PHOTO_SIZE}
+        />
 
         <VStack flex={1} justifyContent='center' px='2'>
           <Text color='gray.700' fontSize='md' fontFamily='regular'>
             Boas vindas,
           </Text>
           <Text color='gray.700' fontSize='md' fontFamily='bold'>
-            {user.nome}
+            {user.nome ? user.nome : 'paciente'}
           </Text>
         </VStack>
 
         <Button
           flex={1}
           title='Criar feedback'
-          bgColor='gray.700'
+          bgColor='blue.700'
           leftIcon={<Plus size={16} color={colors.gray[200]} />}
           onPress={handleOpenCreateFeedback}
         />
@@ -327,18 +272,31 @@ export function Home() {
           rounded={6}
           alignItems='center'
           flexDirection='row'
-          onPress={handleNavigateToMyAds}
+          onPress={handleNavigateToFeedbacks}
         >
           <Chats size={22} color={colors.blue[700]} />
 
           <VStack flex={1} justifyContent='center' px='2'>
-            <Text color='gray.600' fontSize='lg+' fontFamily='bold'>
-              {/* {countActiveFeedbacks()} */}
-              2
-            </Text>
-            <Text color='gray.600' fontSize='xs' fontFamily='regular'>
-              Feedbacks relevantes
-            </Text>
+            {userFeedbacks.length > 0 ? (
+              <>
+                <Text color='gray.600' fontSize='lg+' fontFamily='bold'>
+                  {userFeedbacks.length}
+                </Text>
+                <Text color='gray.600' fontSize='xs' fontFamily='regular'>
+                  Feedbacks relevantes
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text color='gray.600' fontSize='md' fontFamily='bold'>
+                  Nenhum feedback
+                </Text>
+                <Text color='gray.600' fontSize='xs' fontFamily='regular'>
+                  Compartilhe seu relato e ajude outros pacientes!
+                </Text>
+              </>
+            )}
+
           </VStack>
 
           <Text
@@ -347,9 +305,8 @@ export function Home() {
             fontFamily='bold'
             marginRight='2'
           >
-            Meus feedbacks
+            {userFeedbacks.length > 0 ? 'Meus feedbacks' : 'Novo feedback'}
           </Text>
-
           <ArrowRight size={16} color={colors.blue[700]} />
         </Pressable>
       )}
@@ -391,7 +348,7 @@ export function Home() {
         <Loading />
       ) : (
         <FlatList
-          data={professionalsExample}
+          data={professionals}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => <Professionals {...item} />}
           horizontal={false}
@@ -401,7 +358,7 @@ export function Home() {
             gap: 15
           }}
           contentContainerStyle={
-            data.length <= 0 && {
+            professionals.length <= 0 && {
               flex: 1,
               alignItems: 'center',
               justifyContent: 'center',
@@ -544,23 +501,10 @@ export function Home() {
         <Loading />
       ) : (
         <FlatList
-          data={examplesFeedbacks}
+          data={feedbacks}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => <Feedbacks {...item} />}
-          horizontal={false}
-          numColumns={2}
-          columnWrapperStyle={{
-            justifyContent: 'space-between',
-            gap: 15
-          }}
-          contentContainerStyle={
-            data.length <= 0 && {
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }
-          }
-          showsVerticalScrollIndicator={false}
+          mt={7}      
           ListEmptyComponent={
             <Text
               color='gray.500'
@@ -569,7 +513,7 @@ export function Home() {
               mt='6'
               mb='2'
             >
-              Nenhum profissional encontrado!
+              Nenhum feedback encontrado!
             </Text>
           }
         />

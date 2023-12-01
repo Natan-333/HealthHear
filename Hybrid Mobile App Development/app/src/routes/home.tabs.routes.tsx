@@ -2,9 +2,8 @@ import {
   createBottomTabNavigator,
   BottomTabNavigationProp,
 } from '@react-navigation/bottom-tabs';
-import { House, Tag, SignOut } from 'phosphor-react-native';
+import { House, SignOut, Chats } from 'phosphor-react-native';
 import { useTheme, Pressable } from 'native-base';
-import { Platform } from 'react-native';
 import { Home } from '@screens/Home';
 import { MyAds } from '@screens/MyAds';
 import { useAuth } from '@hooks/useAuth';
@@ -47,17 +46,29 @@ export function HomeTabsRoutes() {
       <Screen
         name='home'
         component={Home}
-        options={{
-          tabBarIcon: ({ color }) => <House color={color} size={iconSize} />,
-        }}
+        options={() => ({
+          tabBarIcon: ({ color, focused }) => (
+            <House
+              color={color}
+              size={iconSize}
+              weight={focused ? 'fill' : 'regular'}
+            />
+          ),
+        })}
       />
 
       <Screen
         name='myAds'
         component={MyAds}
-        options={{
-          tabBarIcon: ({ color }) => <Tag color={color} size={iconSize} />,
-        }}
+        options={() => ({
+          tabBarIcon: ({ color, focused }) => (
+            <Chats
+              color={color}
+              size={iconSize}
+              weight={focused ? 'fill' : 'regular'}
+            />
+          ),
+        })}
       />
 
       <Screen

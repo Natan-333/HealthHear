@@ -52,7 +52,7 @@ export function Feedbacks({
         <Pressable onPress={handleNavigateToFeedbackDetails}>
             <VStack>
                 <VStack>
-                    <Divider mt={7} w={CARD_WIDTH - 50} mx={'auto'} />
+                    <Divider w={CARD_WIDTH - 50} mx={'auto'} />
                     <Pressable
                         py='4'
                         width={CARD_WIDTH}
@@ -66,7 +66,7 @@ export function Feedbacks({
                     >
                         <UserPhoto
                             source={
-                                !paciente.imagem
+                                !paciente.imagem || isAnonimo
                                     ? defaultUserPhotoImg
                                     : { uri: paciente.imagem }
                             }
@@ -91,11 +91,11 @@ export function Feedbacks({
                                 }}
                             >
                                 <Text fontSize='lg' fontFamily='bold' color='gray.900' noOfLines={1}>
-                                    {paciente.nome}
+                                    {isAnonimo ? 'Anônimo' : paciente.nome}
                                 </Text>
 
                                 <Text fontSize='sm' fontFamily='regular' color='gray.500' noOfLines={1}>
-                                    {formatDate(data)}
+                                    {formatDate(data.toLocaleString())}
                                 </Text>
                             </Box>
 
@@ -129,15 +129,14 @@ export function Feedbacks({
                             </Box>
                         </Box>
 
-                        <Text fontSize='md' fontFamily='bold' color='gray.600' mt={2} lineHeight={'lg'}>
+                        <Text fontSize='md' fontFamily='bold' color='gray.600' mt={2} lineHeight={'lg'} w={BOX_TEXT_WIDTH}>
                             {titulo}
                         </Text>
 
-                        <Text fontSize='sm' fontFamily='heading' color='gray.500' lineHeight={'md'}>
+                        <Text fontSize='sm' fontFamily='heading' color='gray.500' lineHeight={'md'} w={BOX_TEXT_WIDTH}>
                             {descricao}
                         </Text>
                     </Pressable>
-                    <Divider mb={7} w={CARD_WIDTH - 50} mx={'auto'} />
                 </VStack>
             </VStack>
         </Pressable>

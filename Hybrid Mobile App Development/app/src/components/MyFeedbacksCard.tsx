@@ -52,7 +52,7 @@ export function MyFeedbacksCard({
             </Text>
 
             <Text color='gray.600' fontSize='xs' fontFamily='regular'>
-              Compartilhe seu relato e ajude outros pacientes!
+              Compartilhe seu relato!
             </Text>
           </React.Fragment>
         )}

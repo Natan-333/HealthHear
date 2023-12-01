@@ -42,6 +42,7 @@ import { api } from '@services/api';
 
 // Hook import
 import { useAuth } from '@hooks/useAuth';
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
 
 type PhotoProps = {
   name: string;
@@ -54,7 +55,7 @@ const PHOTO_SIZE = 20;
 export function SignUp() {
   // Hook
   const { signIn } = useAuth();
-  const navigation = useNavigation();
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>();
   const { colors, sizes } = useTheme();
   const toast = useToast();
   const {
@@ -71,7 +72,7 @@ export function SignUp() {
   const [passwordIsVisible, setPasswordIsVisible] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoBack = () => navigation.goBack();
+  const handleGoBack = () => navigate("signIn");
 
   async function handleSignUp(body: SignUpFormData) {
     try {
@@ -90,10 +91,10 @@ export function SignUp() {
       // Avatar
       Object.assign(body, { imagem: photo.uri })
 
-      console.log(body)
       await api.post('/usuarios', body);
 
       await signIn(body.email, body.senha);
+      navigate("homeTabs")
     } catch (error: any) {
       const title = "Não foi possível criar esta conta";
       toast.show({ title, placement: 'top', bgColor: 'red.500' });

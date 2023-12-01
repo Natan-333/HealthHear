@@ -13,7 +13,6 @@ import { IFeedback } from 'src/interfaces/IFeedback';
 export type AuthContextDataProps = {
   user: UserDTO;
   userFeedbacks: IFeedback[];
-  updateUserProfile: () => Promise<void>;
   fetchUserFeedback: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -36,9 +35,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   async function signIn(email: string, password: string) {
     try {
-      console.log("** data login: ", email, password)
       const { data } = await api.post('/login', { email, senha: password });
-
 
       await storageUserSave(data);
       setUser(data);
@@ -58,16 +55,6 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     } finally {
       setIsLoadingUserStorageData(false);
     }
-  }
-
-  async function updateUserProfile() {
-    // try {
-    //   const { data } = await api.get('/users/me');
-    //   setUser(data);
-    //   await storageUserSave(data);
-    // } catch (error) {
-    //   throw error;
-    // }
   }
 
   async function fetchUserFeedback() {
@@ -93,7 +80,6 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       throw error;
     } finally {
       setIsLoadingUserStorageData(false);
-      setUser({} as UserDTO);
     }
   }
 
@@ -106,7 +92,6 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       value={{
         user,
         userFeedbacks,
-        updateUserProfile,
         fetchUserFeedback,
         signIn,
         signOut,

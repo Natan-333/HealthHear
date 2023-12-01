@@ -22,7 +22,7 @@ const { Navigator, Screen } = createBottomTabNavigator<HomeTabsRoutes>();
 export function HomeTabsRoutes() {
   // Hook
   const { sizes, colors } = useTheme();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
 
   const iconSize = sizes[6];
 
@@ -71,17 +71,19 @@ export function HomeTabsRoutes() {
         })}
       />
 
-      <Screen
-        name='signOut'
-        component={LogOutFakeScreen}
-        options={{
-          tabBarIcon: () => (
-            <Pressable onPress={signOut}>
-              <SignOut color={colors.red[400]} size={iconSize} />
-            </Pressable>
-          ),
-        }}
-      />
+      {!!user?.id && (
+        <Screen
+          name='signOut'
+          component={LogOutFakeScreen}
+          options={{
+            tabBarIcon: () => (
+              <Pressable onPress={signOut}>
+                <SignOut color={colors.red[400]} size={iconSize} />
+              </Pressable>
+            ),
+          }}
+        />
+      )}
     </Navigator>
   );
 }

@@ -121,10 +121,10 @@ export function CreateFeedback() {
       return toast.show({ ...defaultToastProps, title: 'Informe a descrição' });
 
     if (registro.trim() === '')
-    return toast.show({ ...defaultToastProps, title: `Informe o ${tipoRegistro}` });
+      return toast.show({ ...defaultToastProps, title: `Informe o ${tipoRegistro}` });
 
     if (UF.trim() === '')
-    return toast.show({ ...defaultToastProps, title: 'Informe a UF' });
+      return toast.show({ ...defaultToastProps, title: 'Informe a UF' });
 
     navigate('previewFeedback', {
       id: null,

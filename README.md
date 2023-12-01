@@ -107,8 +107,14 @@ Siga as instruções abaixo para gerar o arquivo JAR a partir do código-fonte e
 
 1. Clone o repositório ou baixe o código-fonte do projeto para o seu computador.
 2. Navegue até a raiz do projeto, onde o arquivo `pom.xml` está localizado.
-3. Abra o terminal ou prompt de comando nesta localização.
-4. Execute o seguinte comando para compilar o projeto e gerar o arquivo JAR:
+3. Nesta pasta você encontrará o arquivo applicattion.properties.
+4. Caso queira testar com o banco H2, deixe a linha spring.profiles.active=${PROFILE:dev}, caso deseje testar com o banco Oracle, deixa a linha spring.profiles.active=${PROFILE:prod}
+5. Caso escolha o Oracle, adicionar as variáveis de ambiente em sua máquina, sendo que os campos e valores são:
+   5.1. DB_URL: url do banco oracle
+   5.2. DB_USER: usuario do banco oracle
+   5.3. DB_PASS: senha do banco oracle
+7. Abra o terminal ou prompt de comando nesta mesma localização (onde contém o pom.xml).
+8. Execute o seguinte comando para compilar o projeto e gerar o arquivo JAR:
    
 ```bash
 $ mvn clean package
@@ -123,7 +129,7 @@ Executando o Arquivo JAR
 7. Execute o arquivo JAR usando o comando:
 
 ```bash
-$ java -jar nome-do-seu-arquivo.jar
+$ java -jar health.hear-0.0.1-SNAPSHOT.jar
 ```
 
 Solução de Problemas:

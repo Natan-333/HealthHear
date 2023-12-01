@@ -122,11 +122,11 @@ $ mvn clean package
 
 Este comando irá limpar o projeto (remove arquivos compilados anteriores), compila o código-fonte e empacota o resultado em um arquivo JAR dentro do diretório `target`.
 
-5. Após a conclusão do processo, você encontrará o arquivo JAR gerado no diretório `target`.
+9. Após a conclusão do processo, você encontrará o arquivo JAR gerado no diretório `target`.
 
 Executando o Arquivo JAR
-6. Navegue até o diretório `target` que contém o novo arquivo JAR.
-7. Execute o arquivo JAR usando o comando:
+10. Navegue até o diretório `target` que contém o novo arquivo JAR.
+11. Execute o arquivo JAR usando o comando:
 
 ```bash
 $ java -jar health.hear-0.0.1-SNAPSHOT.jar

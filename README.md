@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="" target="https://www.youtube.com/watch?v=Fw51SMWi-k8" style="text-align: center; display: block;">Vídeo Contendo Testes Das Funcionalidades</a>
+  <a href="https://www.youtube.com/watch?v=Fw51SMWi-k8" target="blank" style="text-align: center; display: block;">Vídeo Contendo Testes Das Funcionalidades</a>
 </p>
 
 <br />

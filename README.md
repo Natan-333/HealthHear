@@ -197,7 +197,7 @@ $ yarn start
   <summary><h4><u>Diagrama de Classes (UML)</u></h4></summary>
   <br />
   <p align="center">
-    <img src="Enterprise Applicattion Development/UML.png" alt="MER">
+    <img src="Digital Business Enablement/UML.png" alt="MER">
   </p>
   <br />
   </details>

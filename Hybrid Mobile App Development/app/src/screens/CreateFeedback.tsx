@@ -39,6 +39,7 @@ import { uf as ufValues } from '../data/uf';
 
 // Types import
 import { IFeedback } from '../interfaces/IFeedback';
+import { format } from 'date-fns';
 
 const PHOTO_SIZE = 100;
 
@@ -67,7 +68,7 @@ export function CreateFeedback() {
   const [nota, setNota] = useState(0);
   const [anonimo, setAnonimo] = useState(false)
 
-  const data = new Date();
+  const data = format(new Date(), 'yyyy-MM-dd');
 
   async function handlePhotoSelect() {
     try {
@@ -149,7 +150,7 @@ export function CreateFeedback() {
       },
       isAnonimo: anonimo,
       acao,
-      imagem: imagem?.uri,
+      imagem: imagem?.uri || '',
       tipo
     });
   }

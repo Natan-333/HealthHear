@@ -2,7 +2,7 @@ import { Button as ButtonNativeBase, IButtonProps, Text } from 'native-base';
 
 type Props = IButtonProps & {
   title: string;
-  bgColor?: 'blue.400' | 'gray.700' | 'gray.300';
+  bgColor?: 'blue.400' | 'blue.700' | 'gray.700' | 'gray.300';
 };
 
 export function Button({ title, bgColor = 'blue.400', ...rest }: Props) {

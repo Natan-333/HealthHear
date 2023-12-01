@@ -27,7 +27,8 @@ export function Professionals({
   tipoRegistro, 
   uf, 
   usuario, 
-  especialidades }: IDocument) {
+  especialidades 
+}: IDocument) {
 
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
 

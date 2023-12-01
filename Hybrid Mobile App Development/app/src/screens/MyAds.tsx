@@ -16,7 +16,7 @@ import {
 } from 'native-base';
 import { CaretDown, CaretUp, Plus } from 'phosphor-react-native';
 import { useCallback, useEffect, useState } from 'react';
-import { IProduct } from 'src/interfaces/IProduct';
+import { IFeedback } from 'src/interfaces/IFeedback';
 
 export function MyAds() {
   const { colors, sizes } = useTheme();
@@ -25,7 +25,7 @@ export function MyAds() {
 
   const [filter, setFilter] = useState('Todos');
   const [filterIsOpened, setFilterIsOpened] = useState(false);
-  const [data, setData] = useState<IProduct[]>([] as IProduct[]);
+  const [data, setData] = useState<IFeedback[]>([] as IFeedback[]);
 
   function handleOpenCreateFeedback() {
     navigate('CreateFeedback');
@@ -57,7 +57,7 @@ export function MyAds() {
 
       <HStack justifyContent='space-between' alignItems='center'>
         <Text fontFamily='regular' fontSize='sm' color='gray.600'>
-          {userProducts.length} anúncio{userProducts.length > 1 && 's'}
+          {userProducts?.length} anúncio{userProducts?.length > 1 && 's'}
         </Text>
 
         <Menu

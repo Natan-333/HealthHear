@@ -1,7 +1,7 @@
 import { CreateFeedback } from '@screens/CreateFeedback';
 import { PreviewAd } from '@screens/PreviewAd';
 import { AdDetails } from '@screens/AdDetails';
-import { IProduct } from 'src/interfaces/IProduct';
+import { IFeedback } from 'src/interfaces/IFeedback';
 import {
   NativeStackNavigationProp,
   createNativeStackNavigator,
@@ -10,8 +10,8 @@ import { HomeTabsRoutes } from './home.tabs.routes';
 
 type AppRoutes = {
   homeTabs: undefined;
-  CreateFeedback: undefined | IProduct;
-  previewAd: IProduct & { imagesToDelete: string[] };
+  CreateFeedback: undefined | IFeedback;
+  previewAd: IFeedback & { imagesToDelete: string[] };
   adDetails: { id: string };
 };
 

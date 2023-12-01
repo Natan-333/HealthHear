@@ -124,7 +124,7 @@ export function Feedbacks({
                                 </Box>
 
                                 <Text fontSize='sm' fontFamily='bold' color='gray.600' mb={0}>
-                                    avaliando {formatDocument(registro.numero, registro.uf, registro.tipoRegistro)}
+                                    {formatDocument(registro.numero, registro.uf, registro.tipoRegistro)}
                                 </Text>
                             </Box>
                         </Box>
@@ -133,7 +133,7 @@ export function Feedbacks({
                             {titulo}
                         </Text>
 
-                        <Text fontSize='sm' fontFamily='medium' color='gray.500' lineHeight={'md'}>
+                        <Text fontSize='sm' fontFamily='heading' color='gray.500' lineHeight={'md'}>
                             {descricao}
                         </Text>
                     </Pressable>

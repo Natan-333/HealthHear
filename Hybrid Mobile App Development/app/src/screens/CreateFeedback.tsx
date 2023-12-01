@@ -29,7 +29,7 @@ import { useAuth } from '@hooks/useAuth';
 import { IPhoto } from 'src/interfaces/IPhoto';
 import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 import { HomeTabsNavigatorRoutesProps } from '@routes/home.tabs.routes';
-import { IProduct } from 'src/interfaces/IProduct';
+import { IFeedback } from 'src/interfaces/IFeedback';
 import { api } from '@services/api';
 
 // Component import
@@ -51,7 +51,7 @@ export function CreateFeedback() {
   const toast = useToast();
   const route = useRoute();
 
-  const params = route.params as IProduct;
+  const params = route.params as IFeedback;
 
   // State
   const [images, setImages] = useState<IPhoto[]>([]);

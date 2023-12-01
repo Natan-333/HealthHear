@@ -38,7 +38,7 @@ import { AppError } from '@utils/AppError';
 import { HomeTabsNavigatorRoutesProps } from '@routes/home.tabs.routes';
 import { ProductDTO } from '@dtos/ProductDTO';
 import { ProductMap } from '@mappers/ProductMap';
-import { IProduct } from 'src/interfaces/IProduct';
+import { IFeedback } from 'src/interfaces/IFeedback';
 import { IPaymentMethods } from 'src/interfaces/IPaymentMethods';
 import { Loading } from '@components/Loading';
 import { Feedbacks } from '@components/Feedbacks';
@@ -57,7 +57,7 @@ export function Home() {
 
   const modalizeRef = useRef<Modalize>(null);
 
-  const [data, setData] = useState<IProduct[]>([] as IProduct[]);
+  const [data, setData] = useState<IFeedback[]>([] as IFeedback[]);
   const [paymentMethods, setPaymentMethods] = useState<IPaymentMethods[]>([]);
   const [acceptTrade, setAcceptTrade] = useState<boolean | null>(null);
   const [isNew, setIsNew] = useState<boolean | null>(null);
@@ -163,10 +163,10 @@ export function Home() {
     navigateTabs('myAds');
   }
 
-  function countActiveFeedbacks() {
-    let activeAds = userProducts.map((item) => item.is_active === true);
-    return activeAds.length;
-  }
+  // function countActiveFeedbacks() {
+  //   let activeAds = userProducts.map((item) => item.is_active === true);
+  //   return activeAds.length;
+  // }
 
   function findPaymentMethod(payment_method: IPaymentMethods) {
     return paymentMethods.includes(payment_method);
@@ -217,7 +217,7 @@ export function Home() {
     //   console.log('filtro:', filter);
 
     //   const { data } = await api.get(`/products${filter}`);
-    //   setData(data.map((item: ProductDTO) => ProductMap.toIProduct(item)));
+    //   setData(data.map((item: ProductDTO) => ProductMap.toIFeedback(item)));
     // } catch (error) {
     //   const isAppError = error instanceof AppError;
     //   const title = isAppError
@@ -280,7 +280,7 @@ export function Home() {
           />
         ) : (
           <UserPhoto
-            source={{ uri: `${api.defaults.baseURL}/images/${user.avatar}` }}
+            source={{ uri: user.imagem }}
             alt='Foto do usuário'
             borderWidth={2}
             size={PHOTO_SIZE}
@@ -292,7 +292,7 @@ export function Home() {
             Boas vindas,
           </Text>
           <Text color='gray.700' fontSize='md' fontFamily='bold'>
-            {user.name}
+            {user.nome}
           </Text>
         </VStack>
 
@@ -309,7 +309,7 @@ export function Home() {
         Seus feedbacks anteriores
       </Text>
 
-      {isFetchLoading && userProducts.length <= 0 ? (
+      {isFetchLoading && userProducts?.length <= 0 ? (
         <Skeleton
           w='full'
           h={16}
@@ -330,7 +330,8 @@ export function Home() {
 
           <VStack flex={1} justifyContent='center' px='2'>
             <Text color='gray.600' fontSize='lg+' fontFamily='bold'>
-              {countActiveFeedbacks()}
+              {/* {countActiveFeedbacks()} */}
+              2
             </Text>
             <Text color='gray.600' fontSize='xs' fontFamily='regular'>
               Feedbacks relevantes

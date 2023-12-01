@@ -42,7 +42,6 @@ import { api } from '@services/api';
 
 // Hook import
 import { useAuth } from '@hooks/useAuth';
-import { TextInput } from 'react-native-gesture-handler';
 
 type PhotoProps = {
   name: string;
@@ -74,37 +73,30 @@ export function SignUp() {
 
   const handleGoBack = () => navigation.goBack();
 
-  async function handleSignUp(data: SignUpFormData) {
+  async function handleSignUp(body: SignUpFormData) {
     try {
       setIsLoading(true);
 
-      const { name, password, email, phone } = data;
+      if (!photo.uri)
+        return toast.show({ 
+          title: "Selecione uma imagem", 
+          placement: 'top', 
+          bgColor: 'red.500' 
+        });
 
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('tel', phone);
-      formData.append('password', password);
-      if (!!photo.uri) formData.append('avatar', photo as any);
+      const formattedDocument = body.cpf.replace(/[^\d]/g, '');
+      body.cpf = formattedDocument;
 
-      await api.post('/users', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // Avatar
+      Object.assign(body, { imagem: photo.uri })
 
-      await signIn(email, password);
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError
-        ? error.message
-        : 'Não foi possível criar a conta. Tente novamente mais tarde.';
+      console.log(body)
+      await api.post('/usuarios', body);
 
-      toast.show({
-        title,
-        placement: 'top',
-        bgColor: 'red.500',
-      });
+      await signIn(body.email, body.senha);
+    } catch (error: any) {
+      const title = "Não foi possível criar esta conta";
+      toast.show({ title, placement: 'top', bgColor: 'red.500' });
     } finally {
       setIsLoading(false);
     }
@@ -230,27 +222,27 @@ export function SignUp() {
 
             <Controller
               control={control}
-              name='name'
+              name='nome'
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder='Nome'
                   value={value}
                   autoCorrect={false}
                   onChangeText={onChange}
-                  errorMessage={errors.name?.message}
+                  errorMessage={errors.nome?.message}
                 />
               )}
             />
 
             <Controller
               control={control}
-              name='document'
+              name='cpf'
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder='CPF'
                   value={value}
                   onChangeText={(text) => onChange(toMaskedCPF(text))}
-                  errorMessage={errors.document?.message}
+                  errorMessage={errors.cpf?.message}
                 />
               )}
             />
@@ -273,28 +265,14 @@ export function SignUp() {
 
             <Controller
               control={control}
-              name='phone'
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder='Telefone'
-                  keyboardType='phone-pad'
-                  value={value}
-                  onChangeText={(text) => onChange(toMaskedPhone(text))}
-                  errorMessage={errors.phone?.message}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name='password'
+              name='senha'
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder='Senha'
                   secureTextEntry={passwordIsVisible}
                   value={value}
                   onChangeText={onChange}
-                  errorMessage={errors.password?.message}
+                  errorMessage={errors.senha?.message}
                   InputRightElement={
                     <TouchableOpacity
                       onPress={() => setPasswordIsVisible((prev) => !prev)}

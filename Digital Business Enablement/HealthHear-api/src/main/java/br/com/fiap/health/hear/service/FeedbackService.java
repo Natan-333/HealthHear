@@ -66,6 +66,10 @@ public class FeedbackService {
         return feedbackRepository.findByPacienteId(usuarioId, pageRequest);
     }
 
+    public Page<Feedback> listByRegistroId(Long registroId, Pageable pageRequest) {
+        return feedbackRepository.findByRegistroId(registroId, pageRequest);
+    }
+
     // private FeedbackDTO convertToDto(Feedback entity) {
     //     FeedbackDTO dto = new FeedbackDTO();
     //     dto.setId(entity.getId());

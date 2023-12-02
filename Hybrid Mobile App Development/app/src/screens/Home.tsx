@@ -153,8 +153,14 @@ export function Home() {
         key="filter"
       />
 
-      {hasFeedbacks && feedbacks.map((feedback, index) =>
+      <Text color='gray.500' fontSize='md' fontFamily='regular' mt='6' mb='2'>
+        Feedbacks relevantes
+      </Text>
+      {hasFeedbacks ? 
+      feedbacks.map((feedback, index) =>
         <Feedbacks key={feedback.id} {...feedback} isFirst={index === 0} />
+      ) : (
+        <Text>Nenhum feedback encontrado</Text>
       )}
     </ScrollView>
   );

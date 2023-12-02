@@ -70,7 +70,10 @@ export function ProfessionalDetails() {
   );
 
   const hasData =
-    isLoading && Array.isArray(feedbacks) && feedbacks?.length >= 1;
+    !isLoading && Array.isArray(feedbacks) && feedbacks?.length >= 1;
+
+    
+  if(isLoading) return <Loading />
 
   return (
     <VStack safeAreaTop>
@@ -90,7 +93,6 @@ export function ProfessionalDetails() {
       </HStack>
 
       <ScrollView showsVerticalScrollIndicator={false} >
-        {isLoading && <Loading />}
 
         <VStack py={5} px={5}>
           <Box style={{ position: 'relative' }} display={'flex'} alignItems={'center'}>
@@ -129,12 +131,15 @@ export function ProfessionalDetails() {
             {registro.usuario && formatDocument(registro.numero, registro.uf, registro.tipoRegistro)}
           </Text>
 
+          {(!hasData && !isLoading) ? (
+            <Text textAlign={'center'} mt={2}>O especialista não possui feedback</Text>
+          ) : 
+          (<Text color='gray.700' fontSize='md' fontFamily='bold' my='3' textAlign={'center'}>
+            Feedbacks do {registro.tipoRegistro}
+          </Text>)}
 
           {hasData && feedbacks.map((feedback, index) => (
             <React.Fragment>
-              <Text color='gray.700' fontSize='md' fontFamily='bold' mb='2'>
-                Feedbacks do {registro.tipoRegistro}
-              </Text>
 
               <Feedbacks
                 key={feedback.id}
@@ -143,10 +148,6 @@ export function ProfessionalDetails() {
               />
             </React.Fragment>
           ))}
-
-          {!hasData && !isLoading && (
-            <Text>O especialista não possui feedback</Text>
-          )}
         </VStack>
 
       </ScrollView>

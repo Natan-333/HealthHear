@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Platform, TouchableOpacity, View } from 'react-native';
+import { Platform, TouchableOpacity } from 'react-native';
 import {
   VStack,
   Text,
@@ -25,7 +25,7 @@ import Logo from '@assets/logo.png';
 import { signInSchema, SignInFormData } from '@validations/signInSchema'
 
 // Type import 
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
 
 // Util import
 import { AppError } from '@utils/AppError';
@@ -39,7 +39,7 @@ import { Button } from '@components/Button';
 
 export function SignIn() {
   // Hook
-  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
   const { colors, sizes } = useTheme();
   const {
     control,

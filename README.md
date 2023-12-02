@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="" target="blank" style="text-align: center; display: block;">Vídeo Contendo Testes Das Funcionalidades</a>
+  <a href="https://www.youtube.com/watch?v=Fw51SMWi-k8" target="blank" style="text-align: center; display: block;">Vídeo Contendo Testes Das Funcionalidades</a>
 </p>
 
 <br />
@@ -197,7 +197,7 @@ $ yarn start
   <summary><h4><u>Diagrama de Classes (UML)</u></h4></summary>
   <br />
   <p align="center">
-    <img src="Digital Business Enablement/UML.png" alt="MER">
+    <img src="Digital Business Enablement/HealthHear-api/Documentacao/UML.png" alt="UML">
   </p>
   <br />
   </details>

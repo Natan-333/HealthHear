@@ -1,9 +1,7 @@
 package br.com.fiap.health.hear.controller;
 
-import br.com.fiap.health.hear.dto.RegistroDTO;
 import br.com.fiap.health.hear.dto.UsuarioDTO;
 import br.com.fiap.health.hear.model.Feedback;
-import br.com.fiap.health.hear.model.Registro;
 import br.com.fiap.health.hear.model.Usuario;
 import br.com.fiap.health.hear.service.FeedbackService;
 import br.com.fiap.health.hear.service.UsuarioService;

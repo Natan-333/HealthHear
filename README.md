@@ -140,7 +140,7 @@ Solução de Problemas:
 Navegue até o projeto maven:
 
 ```bash
-$ cd Entregas/Sprint\ 1/Enterprise\ Application\ Development\healthhear
+$ cd '.\Digital Business Enablement\HealthHear-api\'
 ```
 
 Abra o projeto maven em seu editor e execute o arquivo main: HealthHearApplicattion.java
@@ -166,7 +166,7 @@ Antes de mais nada, é necessário alterar o arquivo `Hybrid Mobile App Developm
 Depois navegue até o projeto mobile:
 
 ```bash
-$ cd Entregas/Sprint\ 1/Hybrid\ Mobile\ APP\ Development\ healthhear
+$ cd '.\Hybrid Mobile App Development\app'
 ```
 
 Instale as dependências

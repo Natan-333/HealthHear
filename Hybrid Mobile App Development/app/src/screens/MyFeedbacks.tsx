@@ -1,29 +1,23 @@
 import { Feedbacks } from '@components/Feedbacks';
 import { useAuth } from '@hooks/useAuth';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import {
-  Center,
   HStack,
   Text,
   VStack,
   useTheme,
   Pressable,
-  Select,
   Menu,
-  HamburgerIcon,
   FlatList,
-  Divider,
 } from 'native-base';
 import { CaretDown, CaretUp, Plus } from 'phosphor-react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { feedbackTypes } from '../data/feedbackTypes';
 import { IFeedback } from '../interfaces/IFeedback';
-import { Dimensions } from 'react-native';
-
-const { width } = Dimensions.get('screen');
 
 export function MyFeedbacks() {
+  const { user } = useAuth();
   const { colors, sizes } = useTheme();
   const { userFeedbacks } = useAuth();
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
@@ -33,7 +27,11 @@ export function MyFeedbacks() {
   const [data, setData] = useState<IFeedback[]>([] as IFeedback[]);
 
   function handleOpenCreateFeedback() {
-    navigate('CreateFeedback');
+    const isAuthenticated = !!user.id;
+
+    if (isAuthenticated) return navigate('CreateFeedback');
+
+    return navigate('signIn')
   }
 
   useEffect(() => {

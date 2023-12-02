@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="" target="blank" style="text-align: center; display: block;">Assista no Youtube!</a>
+  <a href="https://www.youtube.com/watch?v=-MF4UsdPNVo" target="blank" style="text-align: center; display: block;">Assista no Youtube!</a>
 </p>
 
 <p align="center">
@@ -124,7 +124,7 @@ Este comando irá limpar o projeto (remove arquivos compilados anteriores), comp
 
 9. Após a conclusão do processo, você encontrará o arquivo JAR gerado no diretório `target`.
 
-Executando o Arquivo JAR
+### Executando o Arquivo JAR
 10. Navegue até o diretório `target` que contém o novo arquivo JAR.
 11. Execute o arquivo JAR usando o comando:
 

@@ -124,7 +124,7 @@ Este comando irá limpar o projeto (remove arquivos compilados anteriores), comp
 
 9. Após a conclusão do processo, você encontrará o arquivo JAR gerado no diretório `target`.
 
-Executando o Arquivo JAR
+### Executando o Arquivo JAR
 10. Navegue até o diretório `target` que contém o novo arquivo JAR.
 11. Execute o arquivo JAR usando o comando:
 

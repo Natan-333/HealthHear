@@ -5,7 +5,7 @@ import { Plus, X } from 'phosphor-react-native';
 import { IPhoto } from 'src/interfaces/IPhoto';
 
 // Component import
-import { ProductSmallPhoto } from '@components/ProductSmallPhoto';
+import { SmallPhoto } from '@components/SmallPhoto';
 
 const PHOTO_SIZE = 100;
 
@@ -24,7 +24,7 @@ export const FeedbackImage = ({
   handleRemovePhoto
 }: FeedbackImageProps) => (
   <VStack>
-    <ProductSmallPhoto
+    <SmallPhoto
       source={{ uri: image.uri }}
       alt='Foto do produto'
       size={PHOTO_SIZE}

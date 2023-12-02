@@ -46,7 +46,6 @@ export function Home() {
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
   const { navigate: navigateTabs } =
     useNavigation<HomeTabsNavigatorRoutesProps>();
-  const { navigate: navigateAuth } = useNavigation<AuthNavigatorRoutesProps>();
 
   const modalizeRef = useRef<Modalize>(null);
 
@@ -117,8 +116,7 @@ export function Home() {
         console.log(feedbacksData.data.content.slice(0, 4))
 
         const registros = await api.get('/registros');
-        // Filtrando pra buscar apenas os registros atrelados a um profissional
-        setProfessionals(registros.data.content.filter((registro: IDocument) => registro.usuario != null).slice(2));
+
         console.log(registros.data.content)
         setProfessionals(registros.data.content)
 

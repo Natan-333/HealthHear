@@ -1,6 +1,6 @@
 import { CreateFeedback } from '@screens/CreateFeedback';
 import { PreviewFeedback } from '@screens/PreviewFeedback';
-import { AdDetails } from '@screens/AdDetails';
+import { ProfessionalDetails } from '@screens/ProfessionalDetails';
 import { IFeedback } from 'src/interfaces/IFeedback';
 import {
   NativeStackNavigationProp,
@@ -12,7 +12,7 @@ type AppRoutes = {
   homeTabs: undefined;
   CreateFeedback: undefined | IFeedback;
   previewFeedback: IFeedback;
-  adDetails: { id: string };
+  professionalDetails: { id: string | number };
 };
 
 export type AppNavigatorRoutesProps = NativeStackNavigationProp<AppRoutes>;
@@ -25,7 +25,7 @@ export function AppRoutes() {
       <Screen name='homeTabs' component={HomeTabsRoutes} />
       <Screen name='CreateFeedback' component={CreateFeedback} />
       <Screen name='previewFeedback' component={PreviewFeedback} />
-      <Screen name='adDetails' component={AdDetails} />
+      <Screen name='professionalDetails' component={ProfessionalDetails} />
     </Navigator>
   );
 }

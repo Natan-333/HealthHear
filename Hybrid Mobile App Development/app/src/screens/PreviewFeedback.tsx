@@ -166,7 +166,7 @@ export function PreviewFeedback() {
         </Text>
       </VStack>
 
-      <Feedbacks {...params} />
+      <Feedbacks isFirst {...params} />
 
       <HStack w='full' safeAreaBottom bg='white' p='3' px='6'>
         <Button

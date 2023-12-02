@@ -156,7 +156,14 @@ Abra o seu navegador e navegue até [http://localhost:8080](http://localhost:808
 
 ##### 👉 **_Mobile:_**
 
-Navegue até o projeto mobile:
+Antes de mais nada, é necessário alterar o arquivo no caminho `Hybrid Mobile App Development/app/src/services/api.ts` e na linha 20, trocando para o IP da sua máquina e lembrando de manter a porta `8080`:
+```bash
+  const api = axios.create({
+    baseURL: 'http://192.168.123.45:8080',
+  }) as APIInstanceProps;
+```
+
+Depois navegue até o projeto mobile:
 
 ```bash
 $ cd Entregas/Sprint\ 1/Hybrid\ Mobile\ APP\ Development\ healthhear

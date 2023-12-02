@@ -100,6 +100,7 @@ export function MyFeedbacks() {
           {feedbackTypes.map((type) => {
             return(
               <Menu.Item
+                key={type.value}
                 w={150}
                 onPress={() => setFilter(type.value)}
                 _text={{

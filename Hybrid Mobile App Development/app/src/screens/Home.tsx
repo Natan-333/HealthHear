@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, Skeleton, Text } from 'native-base';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { HStack, ScrollView, Skeleton, Text } from 'native-base';
 import { Modalize } from 'react-native-modalize';
 import { useNavigation } from '@react-navigation/native';
 
@@ -68,7 +68,7 @@ export function Home() {
     handleSearch();
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true)
@@ -137,9 +137,11 @@ export function Home() {
 
       {isLoading && <Loading />}
 
-      {hasProfessionals && professionals.map(item =>
-        <Professionals key={item.id} {...item} />
-      )}
+      <HStack style={{ gap: 10 }}>
+        {hasProfessionals && professionals.map(item =>
+          <Professionals key={item.id} {...item} />
+        )}
+      </HStack>
 
       <Filter
         filterRef={filterRef}

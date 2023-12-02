@@ -132,13 +132,7 @@ export function CreateFeedback() {
       titulo,
       descricao,
       nota,
-      paciente: {
-        id: 1,
-        nome: "Vitor",
-        email: "vitorrrrr@hotmail.com",
-        cpf: "11111111111",
-        imagem: "imagem teste",
-      },
+      paciente: user,
       registro: {
         id: null,
         numero: registro,

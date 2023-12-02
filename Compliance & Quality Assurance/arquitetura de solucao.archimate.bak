@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="(new model)" id="id-e1c42b3e854e469a966e57cb594361d2" version="5.0.0">
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="HealthHear" id="id-e1c42b3e854e469a966e57cb594361d2" version="5.0.0">
   <folder name="Strategy" id="id-8f4016c8591d4967ae6e4eff2747a3f1" type="strategy"/>
   <folder name="Business" id="id-517b25a8da214d87b5c3412a6b44cfff" type="business">
     <element xsi:type="archimate:BusinessProcess" name="BUS PR.: Processo de registro de denúncia ou feedback" id="id-0696ebecccdf4daa9c18859849f3d011"/>

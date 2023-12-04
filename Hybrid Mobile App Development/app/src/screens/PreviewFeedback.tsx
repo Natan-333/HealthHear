@@ -76,7 +76,6 @@ export function PreviewFeedback() {
 
     } catch (error) {
 
-      // BUG: mesmo quando ambos sao criados (registro e feedback), ele cai nesse catch com um statuscode 404.
       console.error('Erro no handlePublish:', error)
 
       const isAppError = error instanceof AppError;

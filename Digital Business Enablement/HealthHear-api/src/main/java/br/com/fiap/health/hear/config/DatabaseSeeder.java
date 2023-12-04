@@ -8,10 +8,8 @@
  import org.springframework.context.annotation.Profile;
 
  import java.math.BigDecimal;
- import java.util.Arrays;
  import java.util.List;
  import java.util.Set;
- import java.util.HashSet;
  import java.util.Date;
 
 
@@ -32,32 +30,26 @@
 
      @Override
      public void run(String... args) throws Exception {
-//         List<Especialidade> especialidades = Arrays.asList(
-//                 new Especialidade(null, "Neurologia", null),
-//                 new Especialidade(null, "Clínica", null)
-//         );
-//         especialidadeRepository.saveAll(especialidades);
-//
-//         List<Usuario> pessoaList = Arrays.asList(
-//                 new Usuario(null, "Kaue Caponero", "kaue@hotmail.com", "123", "11111111111", "https://avatars.githubusercontent.com/u/111543330?v=4"),
-//                 new Usuario(null, "Natan Cruz", "natan@hotmail.com", "123", "11111111112", "https://avatars.githubusercontent.com/u/111809342?v=4"),
-//                 new Usuario(null, "Stanley Bittar", "stanley@email.com", "123", "11111111115", "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394")
-//         );
-//         usuarioRepository.saveAll(pessoaList);
-//
-//         Set<Especialidade> setEspecialidades = new HashSet<>(especialidades);
-//
-//         List<Registro> registroList = Arrays.asList(
-//                 new Registro(null, "123456", "CRM", "SP", pessoaList.get(2), setEspecialidades),
-//                 new Registro(null, "123457", "CRO", "SP", pessoaList.get(1), setEspecialidades)
-//         );
-//         registroRepository.saveAll(registroList);
-//
-//         List<Feedback> feedbackList = Arrays.asList(
-//                 new Feedback(null, new Date(), "Médico muito competente", "Gostei do atendimento", new BigDecimal(5),  pessoaList.get(0), registroList.get(0), false, null, null, "elogio"),
-//                 new Feedback(null, new Date(), "Gostei do atendimento. Consultório pode melhorar", "Consultório pequeno e ruim.", new BigDecimal(3),  pessoaList.get(1), registroList.get(0), true, null, null, "reclamacao")
-//         );
-//         feedbackRepository.saveAll(feedbackList);
+         Especialidade especialidade1 = new Especialidade((long)(1), "Neurologia", null);
+         Especialidade especialidade2 = new Especialidade((long)(2), "Clínica", null);
+         especialidadeRepository.saveAll(List.of(especialidade1, especialidade2));
+
+         Usuario usuario1 = new Usuario((long)(1), "Kaue Caponero", "kaue@hotmail.com", "123", "11111111111", "https://avatars.githubusercontent.com/u/111543330?v=4");
+         Usuario usuario2 = new Usuario((long)(2), "Natan Cruz", "natan@hotmail.com", "123", "11111111112", "https://avatars.githubusercontent.com/u/111809342?v=4");
+         Usuario usuario3 = new Usuario((long)(3), "Stanley Bittar", "stanley@email.com", "123", "11111111115", "https://istoe.com.br/wp-content/uploads/2022/07/stanley-bittar.jpg?x55394");
+         usuarioRepository.saveAll(List.of(usuario1, usuario2, usuario3));
+
+         Registro registro1 = new Registro((long)(1), "123456", "CRM", "SP", usuario3, Set.of(especialidade1));
+         Registro registro2 = new Registro((long)(2), "123457", "CRO", "SP", usuario2, Set.of(especialidade2));
+         registroRepository.saveAll(List.of(registro1, registro2));
+
+         Feedback feedback1 = new Feedback((long)(1), new Date(), "Médico muito competente", "Voltarei outras vezes", new BigDecimal(5), usuario1, registro1, false, null, null, "elogio");
+         Feedback feedback2 = new Feedback((long)(2), new Date(), "Atendimento ok.", "Consultório pode melhorar", new BigDecimal(3), usuario2, registro1, true, null, null, "reclamacao");
+         feedbackRepository.saveAll(List.of(feedback1, feedback2));
+
+         Resposta resposta1 = new Resposta((long)(1), new Date(), "Obrigada pela avaliação! Espero que volte mais vezes", usuario1, feedback1);
+         Resposta resposta2 = new Resposta((long)(2), new Date(), "Que pena ouvir isso. Seguimos melhorando o consultório para melhor atendê-los.", usuario2, feedback2);
+//         respostaRepository.saveAll(List.of(resposta1, resposta2));
      }
 
  }

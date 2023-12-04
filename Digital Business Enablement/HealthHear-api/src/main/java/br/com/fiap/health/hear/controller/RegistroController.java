@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("registros")
 @Slf4j
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RegistroController {
 
     @Autowired

@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/login")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class LoginController {
 
     private final UsuarioService usuarioService;

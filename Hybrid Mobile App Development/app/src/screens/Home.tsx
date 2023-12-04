@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { HStack, ScrollView, Skeleton, Text } from 'native-base';
+import { HStack, ScrollView, Skeleton, Text, useToast } from 'native-base';
 import { Modalize } from 'react-native-modalize';
 import { useNavigation } from '@react-navigation/native';
 
@@ -23,6 +23,7 @@ import { Filter } from '@components/Filter';
 import { SearchInput } from '@components/SearchInput';
 import { MyFeedbacksCard } from '@components/MyFeedbacksCard';
 import { Professionals } from '@components/Professionals';
+import { AppError } from '@utils/AppError';
 
 export function Home() {
   // Hook
@@ -33,6 +34,8 @@ export function Home() {
 
   // Ref
   const filterRef = useRef<Modalize>(null);
+
+  const toast = useToast();
 
   // State
   const [feedbacks, setFeedbacks] = useState<IFeedback[]>([] as IFeedback[]);
@@ -79,7 +82,16 @@ export function Home() {
         const registros = await api.get('/registros');
         setProfessionals(registros.data.content)
       } catch (error) {
-        console.error('Erro ao buscar dados: ', error);
+        const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível buscar os feedbacks. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
       } finally {
         setIsLoading(false)
       }

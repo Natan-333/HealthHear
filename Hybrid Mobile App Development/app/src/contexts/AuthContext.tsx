@@ -9,6 +9,8 @@ import {
 
 // Type import 
 import { IFeedback } from 'src/interfaces/IFeedback';
+import { AppError } from '@utils/AppError';
+import { useToast } from 'native-base';
 
 export type AuthContextDataProps = {
   user: UserDTO;
@@ -28,6 +30,7 @@ const AuthContext = createContext<AuthContextDataProps>(
 );
 
 function AuthContextProvider({ children }: AuthContextProviderProps) {
+  const toast = useToast();
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
   const [userFeedbacks, setUserFeedbacks] = useState<IFeedback[]>([]);
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] =
@@ -40,7 +43,16 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       await storageUserSave(data);
       setUser(data);
     } catch (error) {
-      throw error;
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível realizar o seu login. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
     }
   }
 
@@ -51,7 +63,16 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       setUser({} as UserDTO);
       return await storageUserRemove();
     } catch (error) {
-      throw error;
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível sair da sua conta. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
     } finally {
       setIsLoadingUserStorageData(false);
     }
@@ -64,7 +85,16 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         setUserFeedbacks(response.data.content);
       }
     } catch (error) {
-      throw error;
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível buscar seus feedbacks. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
     }
   }
 
@@ -77,7 +107,16 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       if (userLogged) return setUser(userLogged);
     
     } catch (error) {
-      throw error;
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : 'Não foi possível buscar seus dados. Tente novamente mais tarde.';
+
+      toast.show({
+        title,
+        placement: 'top',
+        bgColor: 'red.500',
+      });
     } finally {
       setIsLoadingUserStorageData(false);
     }

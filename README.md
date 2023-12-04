@@ -140,7 +140,7 @@ Solução de Problemas:
 Navegue até o projeto maven:
 
 ```bash
-$ cd Entregas/Sprint\ 1/Enterprise\ Application\ Development\healthhear
+$ cd '.\Digital Business Enablement\HealthHear-api\'
 ```
 
 Abra o projeto maven em seu editor e execute o arquivo main: HealthHearApplicattion.java
@@ -156,10 +156,17 @@ Abra o seu navegador e navegue até [http://localhost:8080](http://localhost:808
 
 ##### 👉 **_Mobile:_**
 
-Navegue até o projeto mobile:
+Antes de mais nada, é necessário alterar o arquivo `Hybrid Mobile App Development/app/src/services/api.ts` na linha 20, trocando para o IP da sua máquina e lembrando-se de manter a porta `8080`:
+```bash
+  const api = axios.create({
+    baseURL: 'http://192.168.123.45:8080',
+  }) as APIInstanceProps;
+```
+
+Depois navegue até o projeto mobile:
 
 ```bash
-$ cd Entregas/Sprint\ 1/Hybrid\ Mobile\ APP\ Development\ healthhear
+$ cd '.\Hybrid Mobile App Development\app'
 ```
 
 Instale as dependências
